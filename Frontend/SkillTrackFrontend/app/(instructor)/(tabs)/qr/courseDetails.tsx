@@ -1,3 +1,4 @@
+// this file represents the list of skills associated to a particular course
 // app/(instructor)/(tabs)/qr/courseDetails.tsx
 import { useState, useEffect, useMemo } from 'react';
 import { View, FlatList, StyleSheet } from 'react-native';

@@ -1,3 +1,6 @@
+// this file represents the skill details when a certain skill is clicked to check off.
+// it serves as a reminder for the instructor to verify that the student has met the appropriate requirements
+
 // app/(instructor)/(tabs)/qr/skillDetails.tsx
 import { useState, useEffect } from 'react';
 import { View, ScrollView, Pressable, Linking, Alert, StyleSheet } from 'react-native';

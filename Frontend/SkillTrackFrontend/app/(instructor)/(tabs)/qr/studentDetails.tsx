@@ -1,5 +1,5 @@
 // this file represents student detail page after an instructor has scanned that student's QR code
-// the page should show the students name, email, and list of courses per
+// the page should show the students name, email, and list of courses (along with how many skills the student has completed in those courses)
 
 // app/(instructor)/(tabs)/qr/[email].tsx
 import { useState, useEffect, useMemo } from 'react';
