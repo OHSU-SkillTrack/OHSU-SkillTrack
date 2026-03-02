@@ -3,7 +3,7 @@
 
 // app/(instructor)/(tabs)/qr/[email].tsx
 import { useState, useEffect, useMemo } from 'react';
-import { View, FlatList, Pressable, StyleSheet } from 'react-native';
+import { View, FlatList, StyleSheet } from 'react-native';
 import { fetchAuthSession } from 'aws-amplify/auth';
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import { BASE_URL } from '@/src/constants/api';
@@ -76,6 +76,7 @@ export default function StudentProfileScreen() {
     const [student, setStudent] = useState<StudentData | null>(null);
     const [courses, setCourses] = useState<Course[]>([]);
     const [searchQuery, setSearchQuery] = useState('');
+    const [skillStatuses, setSkillStatuses] = useState<Record<string, Record<string, boolean>>>({});
 
     // loading/error states
     const [loading, setLoading] = useState(true);
@@ -90,6 +91,21 @@ export default function StudentProfileScreen() {
                 const studentData: StudentData = data[studentEmail];
                 setStudent(studentData);
 
+                // we need to map our status so we can display how many skills are completed
+                const statuses = Object.fromEntries(
+                    Object.entries(studentData.Courses ?? {}).map(([courseId, course]) => [
+                        courseId,
+                        Object.fromEntries(
+                            Object.entries((course as CourseData).Skills ?? {}).map(([skillName, skill]) => [
+                                skillName,
+                                skill.CheckedOff,
+                            ])
+                        ),
+                    ])
+                );
+
+                setSkillStatuses(statuses);
+
                 // converts the courses from the response into our Course array to display it as a list
                 const parsed: Course[] = Object.entries(studentData.Courses ?? {}).map( // check for null cases
                     // map everything
@@ -99,8 +115,8 @@ export default function StudentProfileScreen() {
                         const completedSkills = skillsArray.filter((s) => s.CheckedOff).length;
 
                         return{
-                            courseId, // key
-                            courseName: (course as CourseData).CourseName ?? 'Unnamed Course', // value
+                            courseId,
+                            courseName: (course as CourseData).CourseName ?? 'Unnamed Course',
                             totalSkills,
                             completedSkills,
                         };
@@ -138,8 +154,13 @@ export default function StudentProfileScreen() {
             courseId: course.courseId,
             courseName: course.courseName,
             email: encodeURIComponent(studentEmail),
-            firstName: student?.firstName ?? '',
-            lastName: student?.lastName ?? '',
+            firstName: student?.FirstName ?? '',
+            lastName: student?.LastName ?? '',
+
+            // NOTE: does the checkoff include the person and date of checkoff...??? doesnt seem so yet
+            skillStatuses: JSON.stringify(
+                skillStatuses[course.courseId]
+            )
         },
         });
     }
@@ -159,7 +180,8 @@ export default function StudentProfileScreen() {
         <View style={generalStyles.container}>
             {/* NOTE: if we wanted to componentize this header and subtitle thing we can... */}
 
-            <Header text={`${student?.FirstName} ${student?.LastName}`} 
+            <Header 
+                text={`${student?.FirstName} ${student?.LastName}`} 
                 backArrow={true} 
 
                 // NOTE: must test if this actually goes back to camera once QR code is implemented.
@@ -188,12 +210,6 @@ export default function StudentProfileScreen() {
 }
 
 const styles = StyleSheet.create({
-studentName: {
-    fontSize: 24,
-    fontWeight: '600',
-    color: '#000',
-    marginBottom: 4,
-},
 subtitle: {
     fontSize: 18,
     fontWeight: '600',
