@@ -113,7 +113,7 @@ Resources:
           TABLE_NAME: SkillTrackTable
 
   #/FetchUserToken
-  #Used to Fetch the information of the logged in user
+  #Called by a user to generate a temporary token for themselves
   FetchUserTokenFunction:
     Type: AWS::Serverless::Function
     Properties:
@@ -135,6 +135,33 @@ Resources:
       Environment:
         Variables:
           TOKEN_TABLE_NAME: SkillTrackTokenTable
+    
+  #/TokenToEmail
+  TokenToEmailFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: TokenToEmail/
+      Handler: app.token_to_email
+      Runtime: python3.13
+      Architectures:
+        - x86_64
+      Events:
+        TokenToEmail:
+          Type: Api 
+          Properties:
+            RestApiId: !Ref MyApi
+            Path: /TokenToEmail
+            Method: get
+      Policies:
+        - DynamoDBCrudPolicy:
+            TableName: SkillTrackTokenTable
+        - DynamoDBCrudPolicy:
+            TableName: SkillTrackTable
+      Environment:
+        Variables:
+          TOKEN_TABLE_NAME: SkillTrackTokenTable
+          TABLE_NAME: SkillTrackTable
+
 
 
   #/CheckStudentOff
