@@ -185,7 +185,7 @@ export default function StudentProfileScreen() {
                 backArrow={true} 
 
                 // NOTE: must test if this actually goes back to camera once QR code is implemented.
-                onBackPress={() => router.back()}/>
+                onBackPress={() => router.navigate("/(instructor)/(tabs)/camera")}/>
             <AppText style={styles.subtitle}>Current Courses</AppText>
 
             <SearchBar value={searchQuery} onChange={setSearchQuery} />

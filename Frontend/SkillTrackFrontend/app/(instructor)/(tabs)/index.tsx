@@ -2,7 +2,6 @@ import { AppText } from "@/components/AppText";
 import { signOut } from "aws-amplify/auth";
 import { Pressable, View } from "react-native";
 
-import { router } from "expo-router";
 
 export default function InstructorIndex() {
 
@@ -20,12 +19,6 @@ export default function InstructorIndex() {
                 <AppText>Logout</AppText>
             </Pressable>
             <AppText>Instructor</AppText>
-            <Pressable onPress={() => router.push({
-            pathname: '/(instructor)/(tabs)/qr/studentDetails',
-            params: { email: encodeURIComponent('test100100@test100100abcdefghi123.com') }
-            })}>
-            <AppText>Test Student Profile</AppText>
-            </Pressable>
         </View>
     )
 }
