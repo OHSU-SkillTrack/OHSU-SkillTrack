@@ -14,6 +14,16 @@ export default function InstructorTabs() {
                 }}
             />
 
+            <Tabs.Screen
+                name="courses"
+                options={{
+                    title: "Courses",
+                    tabBarIcon: () => (
+                        <Ionicons name="book-outline" size={30} color="#000000"/>
+                    )
+                }}
+            />
+
             <Tabs.Screen 
                 name="camera"
                 options={{
