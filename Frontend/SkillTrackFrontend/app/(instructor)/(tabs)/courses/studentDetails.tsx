@@ -1,13 +1,13 @@
 import { fetchAuthSession } from 'aws-amplify/auth';
-import { FlatList, View, Pressable } from "react-native";
+import { FlatList, View } from "react-native";
 import { useEffect, useMemo, useState } from "react";
 import { useRouter, useLocalSearchParams } from 'expo-router';
-import { Ionicons } from '@expo/vector-icons';
 
 import { BASE_URL } from '@/src/constants/api';
 
 import { AppText } from "@/components/AppText";
 import { SearchBar } from "@/components/ui/SearchBar";
+import { SkillCard } from "@/components/skill/SkillCard";
 import { Header } from "@/components/ui/Header";
 import { LoadingScreen } from "@/components/ui/LoadingScreen";
 
@@ -147,21 +147,10 @@ export default function StudentDetailsScreen() {
 
     const renderSkill = ({ item }: { item: Skill }) => {
         return (
-            <Pressable
-                style={styles.skillCard}
+            <SkillCard 
+                skill={{ skillName: item.skillName, status: item.checkedOff }}
                 onPress={() => handleSkillPress(item)}
-            >
-                <View style={styles.skillInfo}>
-                    <View style={{ flex: 1 }}>
-                        <AppText style={styles.cardNameText}>{item.skillName}</AppText>
-                    </View>
-                    {item.checkedOff ? (
-                        <Ionicons name="checkmark-circle" size={24} color="#4972FF" />
-                    ) : (
-                        <Ionicons name="ellipse-outline" size={24} color="#9AA0A6" />
-                    )}
-                </View>
-            </Pressable>
+            />
         );
     };
 

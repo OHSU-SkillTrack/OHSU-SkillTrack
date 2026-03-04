@@ -1,5 +1,5 @@
 import { fetchAuthSession } from 'aws-amplify/auth';
-import { FlatList, View, Pressable, TouchableOpacity } from "react-native";
+import { FlatList, View, TouchableOpacity } from "react-native";
 import { useEffect, useMemo, useState } from "react";
 import { useRouter } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
@@ -8,6 +8,7 @@ import { BASE_URL } from '@/src/constants/api';
 
 import { AppText } from "@/components/AppText";
 import { SearchBar } from "@/components/ui/SearchBar";
+import { CourseCard } from "@/components/course/CourseCard";
 import { Header } from "@/components/ui/Header";
 import { LoadingScreen } from "@/components/ui/LoadingScreen";
 
@@ -134,19 +135,7 @@ export default function InstructorCourses() {
 
     const renderCourse = ({ item }: { item: Course }) => {
         return (
-            <Pressable
-                style={styles.courseCard}
-                onPress={() => handleCoursePress(item)}
-            >
-                <View style={styles.courseHeader}>
-                    <AppText style={styles.cardNameText}>
-                        {item.courseName}
-                    </AppText>
-                    <AppText style={styles.courseProgressText}>
-                        {item.studentCount} student{item.studentCount !== 1 ? 's' : ''}
-                    </AppText>
-                </View>
-            </Pressable>
+            <CourseCard course={item} onPress={handleCoursePress} />
         );
     };
 
