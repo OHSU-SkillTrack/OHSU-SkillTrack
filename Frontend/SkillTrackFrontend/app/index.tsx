@@ -61,7 +61,7 @@ export default function Index() {
     }
 
     if (role === "Student") {
-        return <Redirect href="/(student)/(tabs)" />
+        return <Redirect href="/(student)/(tabs)/mainFlow/courses" />
     }
     if (role === "Teacher") {
         return <Redirect href="/(instructor)/(tabs)" />

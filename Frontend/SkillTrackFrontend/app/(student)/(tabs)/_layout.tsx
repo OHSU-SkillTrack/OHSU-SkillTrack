@@ -3,13 +3,12 @@ import { Tabs } from "expo-router";
 
 export default function StudentTabs() {
     return (
-        <Tabs initialRouteName="courses" screenOptions={{ headerShown: false }}>
-            <Tabs.Screen
-                name="index"
-                options={{
-                    href: null
-                }}
-            />
+        <Tabs
+            initialRouteName="mainFlow/courses"
+            screenOptions={{
+                headerShown: false,
+                sceneStyle: { backgroundColor: "#FFFFFF" }
+            }}>
             <Tabs.Screen
                 name="profile"
                 options={{
@@ -20,7 +19,7 @@ export default function StudentTabs() {
                 }}
             />
             <Tabs.Screen
-                name="courses"
+                name="mainFlow/courses"
                 options={{
                     title: "Courses",
                     tabBarIcon: () => (
@@ -35,6 +34,20 @@ export default function StudentTabs() {
                     tabBarIcon: () => (
                         <Ionicons name="book-outline" size={30} color={"#FFFFFF"} />
                     )
+                }}
+            />
+            <Tabs.Screen
+                name="mainFlow/courseDetails"
+                options={{
+                    href: null,
+                    tabBarItemStyle: { display: 'none' }
+                }}
+            />
+            <Tabs.Screen
+                name="mainFlow/skillDetails"
+                options={{
+                    href: null,
+                    tabBarItemStyle: { display: 'none' }
                 }}
             />
         </Tabs>

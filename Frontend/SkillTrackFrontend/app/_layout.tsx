@@ -9,16 +9,16 @@ Amplify.configure(config);
 export default function RootLayout() {
 	useFonts({
 		Afacad: require("../assets/fonts/static/Afacad-Regular.ttf"),
-	});
+	})
 
 	return (
 		<Authenticator.Provider>
 			<Authenticator>
-				<Stack screenOptions={{ headerShown: false }}>
+				<Stack screenOptions={{ headerShown: false, contentStyle: { backgroundColor: "#FFFFFF" } }}>
 					<Stack.Screen name="(student)" />
 					<Stack.Screen name="(instructor)" />
 				</Stack>
 			</Authenticator>
 		</Authenticator.Provider>
-	);
+	)
 }

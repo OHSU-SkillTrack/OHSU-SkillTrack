@@ -2,6 +2,7 @@ import { fetchAuthSession } from 'aws-amplify/auth';
 
 import { FlatList, View } from "react-native";
 import { useEffect, useMemo, useState } from "react";
+import { useRouter } from 'expo-router';
 
 import { BASE_URL } from '@/src/constants/api';
 
@@ -66,6 +67,7 @@ export default function Courses() {
     const [loading, setLoading] = useState(true)
     const [courses, setCourses] = useState<Course[]>([])
     const [searchQuery, setSearchQuery] = useState('')
+    const router = useRouter();
 
     useEffect(() => {
         async function loadUser() {
@@ -86,7 +88,7 @@ export default function Courses() {
                     const skillsArr = Object.values(course.Skills ?? {});
                     const totalSkills = skillsArr.length;
                     const completedSkills = skillsArr.filter((s) => s.CheckedOff).length;
-                    
+
                     const newCourse: Course = { courseId, courseName, totalSkills, completedSkills }
                     coursesParsed.push(newCourse)
                 })
@@ -115,8 +117,17 @@ export default function Courses() {
         )
     }, [courses, searchQuery])
 
+
     function handleCoursePress(course: Course) {
-        return
+        router.push({
+            pathname: '/mainFlow/courseDetails',
+            params: {
+                id: encodeURIComponent(course.courseName),
+                courseId: encodeURIComponent(course.courseId),
+                totalSkills: course.totalSkills.toString(),
+                completedSkills: course.completedSkills.toString(),
+            }
+        });
     }
 
     const renderCourse = ({ item }: { item: Course }) => {
