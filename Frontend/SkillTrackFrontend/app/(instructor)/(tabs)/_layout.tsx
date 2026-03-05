@@ -4,10 +4,18 @@ import { Tabs } from "expo-router";
 export default function InstructorTabs() {
     return (
         <Tabs screenOptions={{ headerShown: false }}>
+            {/* Hide index tab */}
             <Tabs.Screen
                 name="index"
                 options={{
-                    title: "Home",
+                    href: null
+                }}
+            />
+
+            <Tabs.Screen
+                name="profile"
+                options={{
+                    title: "Profile",
                     tabBarIcon: () => (
                         <Ionicons name="person-outline" size={30} color="#000000"/>
                     )

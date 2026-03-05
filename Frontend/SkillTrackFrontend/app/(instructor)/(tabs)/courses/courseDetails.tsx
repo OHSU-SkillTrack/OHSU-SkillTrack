@@ -1,7 +1,8 @@
 import { fetchAuthSession } from 'aws-amplify/auth';
-import { FlatList, View, Pressable } from "react-native";
+import { FlatList, View, Pressable, TouchableOpacity } from "react-native";
 import { useEffect, useMemo, useState } from "react";
 import { useRouter, useLocalSearchParams } from 'expo-router';
+import { Ionicons } from '@expo/vector-icons';
 
 import { BASE_URL } from '@/src/constants/api';
 
@@ -169,8 +170,41 @@ export default function CourseDetailsScreen() {
                     keyExtractor={(item) => item.email}
                     contentContainerStyle={styles.listContent}
                     showsVerticalScrollIndicator={false}
+                    ListFooterComponent={
+                        <View style={{ height: 100 }} />
+                    }
                 />
             )}
+
+            {/* Add Student Button */}
+            <View style={{ position: 'absolute', bottom: 30, alignSelf: 'center' }}>
+                <TouchableOpacity
+                    style={{
+                        width: 56,
+                        height: 56,
+                        borderRadius: 28,
+                        backgroundColor: '#4972FF',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        shadowColor: '#000',
+                        shadowOffset: { width: 0, height: 4 },
+                        shadowOpacity: 0.3,
+                        shadowRadius: 8,
+                        elevation: 8,
+                    }}
+                    onPress={() => {
+                        router.push({
+                            pathname: '/(instructor)/(tabs)/courses/addStudent' as any,
+                            params: {
+                                courseId: courseId,
+                                courseName: courseName,
+                            }
+                        });
+                    }}
+                >
+                    <Ionicons name="add" size={32} color="#FFFFFF" />
+                </TouchableOpacity>
+            </View>
         </View>
     );
 }
