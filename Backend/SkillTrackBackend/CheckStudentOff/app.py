@@ -16,6 +16,8 @@ Student_List
 import json
 import os
 import boto3
+from datetime import datetime
+from zoneinfo import ZoneInfo
 
 dynamodb = boto3.resource("dynamodb")
 table = dynamodb.Table(os.environ["TABLE_NAME"])
@@ -134,23 +136,41 @@ def lambda_handler(event, context):
     
     #This section likely needs the largest overhaul
 
+
+
     try:
+        teacherName = calling_user_info['FirstName'] + " " + calling_user_info['LastName']
+
+        date_str = datetime.now(ZoneInfo("America/Los_Angeles")).strftime("%m/%d/%Y")
+
+
         for student_email in student_list:
 
             #see if we can find the indexes of what we want to update
 
             table.update_item(
                 Key = {"ID": "USER#" + student_email},
-                UpdateExpression = "SET #Courses.#Course_ID.#Skills.#ParticularSkill.#CheckedOff = :val",
+                UpdateExpression = """
+                    SET 
+                        #Courses.#Course_ID.#Skills.#ParticularSkill.#CheckedOff = :val,
+                        #Courses.#Course_ID.#Skills.#ParticularSkill.#CheckedOffBy =  :name,
+                        #Courses.#Course_ID.#Skills.#ParticularSkill.#DateCheckedOff =  :date
+
+                """,
+                
                 ExpressionAttributeNames={
                     "#Courses":         'Courses',
                     "#Course_ID":       course_id,
                     "#Skills":           'Skills',
                     "#ParticularSkill":  skill_name,
-                    "#CheckedOff":       'CheckedOff'
+                    "#CheckedOff":       'CheckedOff',
+                    "#CheckedOffBy":     'CheckedOffBy',
+                    "#DateCheckedOff":   'DateCheckedOff'
                 },
                 ExpressionAttributeValues={
-                    ':val': True
+                    ':val': True,
+                    ':name': teacherName,
+                    ':date': date_str
                 },
                 ConditionExpression = "attribute_exists(#Courses.#Course_ID.#Skills.#ParticularSkill)"    
             )
