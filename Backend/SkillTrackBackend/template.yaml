@@ -17,7 +17,7 @@ Resources:
     Properties:
       StageName: Prod
       Cors:
-        AllowMethods: "'GET,POST,OPTIONS'"
+        AllowMethods: "'GET,POST,OPTIONS, DELETE'"
         AllowHeaders: "'Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token'"
         AllowOrigin: "'*'"
       Auth:
@@ -211,6 +211,31 @@ Resources:
       Environment:
         Variables:
           TABLE_NAME: SkillTrackTable
+
+
+
+  HardDeleteCourseFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: HardDeleteCourse/
+      Handler: app.hard_delete_course
+      Runtime: python3.13
+      Architectures:
+        - x86_64
+      Events:
+        HardDeleteCourse:
+          Type: Api
+          Properties:
+            RestApiId: !Ref MyApi
+            Path: /HardDeleteCourse
+            Method: delete
+      Policies:
+        - DynamoDBCrudPolicy:
+            TableName: SkillTrackTable
+      Environment:
+        Variables:
+          TABLE_NAME: SkillTrackTable
+
 
   #/AddStudentToCourse
   #Adds student to a course (typically a course if made from a template first, then you can add students to it with this endpoint)
