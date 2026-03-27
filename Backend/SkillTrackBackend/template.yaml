@@ -281,6 +281,30 @@ Resources:
       Environment:
         Variables:
           TABLE_NAME: SkillTrackTable
+
+
+
+  CreateTemplateFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: CreateTemplate/
+      Handler: app.create_template
+      Runtime: python3.13
+      Architectures:
+        - x86_64
+      Events:
+        CreateTemplate:
+          Type: Api
+          Properties:
+            RestApiId: !Ref MyApi
+            Path: /CreateTemplate
+            Method: post
+      Policies:
+        - DynamoDBCrudPolicy:
+            TableName: SkillTrackTable
+      Environment:
+        Variables:
+          TABLE_NAME: SkillTrackTable
   #----------------------------------------------------------------------ENDPOINT DEFINITION SECTION---------------------------------------------------------------------------------------#
 
 
