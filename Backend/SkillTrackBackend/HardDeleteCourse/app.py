@@ -68,6 +68,7 @@ def hard_delete_course(event, context):
     #there are three key steps to wiping out a course. First we need to eliminate it in the teacher records, then in the student records, then we can remove the actual row itself
    
     #first wipe away from teacher rows
+    
     try:
         teachers = courseToDelete.get("Teachers", [])
 
@@ -83,7 +84,7 @@ def hard_delete_course(event, context):
 
             )
 
-    except:
+    except Exception as e:
         statusCode = 500
         output_body = "Error reading data from the table. Ended with this error: " + str(e)
         return{
@@ -91,6 +92,7 @@ def hard_delete_course(event, context):
                 "headers": GlobalHeaders,       
                 "body": json.dumps(output_body)
             }
+    
 
 
     #now we wipe away from student rows 
@@ -109,7 +111,7 @@ def hard_delete_course(event, context):
 
             )
 
-    except:
+    except Exception as e:
         statusCode = 500
         output_body = "Error reading data from the table. Ended with this error: " + str(e)
         return{
@@ -117,8 +119,10 @@ def hard_delete_course(event, context):
                 "headers": GlobalHeaders,       
                 "body": json.dumps(output_body)
             }
+
     
 
+    
     #finally, we can delete this row itself
     try:
         table.delete_item(
@@ -129,7 +133,7 @@ def hard_delete_course(event, context):
         )
 
 
-    except:
+    except Exception as e:
         statusCode = 500
         output_body = "Error reading data from the table. Ended with this error: " + str(e)
         return{
@@ -137,6 +141,9 @@ def hard_delete_course(event, context):
                 "headers": GlobalHeaders,       
                 "body": json.dumps(output_body)
             }
+    
+    
+
     
 
 

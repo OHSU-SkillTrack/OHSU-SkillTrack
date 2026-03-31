@@ -15,6 +15,7 @@ Template_ID - The ID of a template in the database as a string.
 import json
 import os
 import boto3
+import random
 from datetime import datetime   #useful for generating the courseID 
 
 dynamodb = boto3.resource("dynamodb")
@@ -146,12 +147,24 @@ def create_course_from_template(event, context):
 
     #now that object has been made, try to insert it into the table as a new course
     try:
-        table.put_item(Item = course_row_to_insert, ConditionExpression="attribute_not_exists(ID)")
-        statusCode = 201
-        body = "successfully created course"
+
+        #try to make the course, first try to make it without any modifiers, just the base ID and year.
+        try:
+            table.put_item(Item = course_row_to_insert, ConditionExpression="attribute_not_exists(ID)")
+            statusCode = 201
+            body = "successfully created course"
+        #If that fails we will try creating a unique number digit to append. It will be monthInt+dayInt+randInt where the random int is anything between 0 to 999.
+        #This way any possible colissions that occur would only occur if the course is made on the same day and the chances of a collision are very low, unless something like 100 courses
+        #are made in one day for some reason, the probability of another colision will remain well under 10% for each attempt.
+        except:
+            generated_course_id = template_ID + "-" + str(datetime.now().year) + "_" + str(datetime.now().month) + str(datetime.now().day) + str(random.randint(0,999))
+            course_row_to_insert["ID"] =  "COURSE#" + generated_course_id
+            table.put_item(Item = course_row_to_insert, ConditionExpression="attribute_not_exists(ID)")
+            body = "successfully created course"
+            statusCode = 201
     except:
        statusCode = 409
-       body = "A course with this ID already exists!"
+       body = "Error occured with course generation, please try again"
        return {
             "statusCode": statusCode,
             "headers": GlobalHeaders,       
