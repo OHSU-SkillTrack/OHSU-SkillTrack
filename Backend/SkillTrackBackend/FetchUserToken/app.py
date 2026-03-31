@@ -3,6 +3,7 @@ import os
 import boto3
 import secrets
 import time 
+from boto3.dynamodb.conditions import Attr
 dynamodb = boto3.resource("dynamodb")
 token_table = dynamodb.Table(os.environ["TOKEN_TABLE_NAME"])
 
@@ -50,6 +51,30 @@ def lambda_handler(event, context):
         statusCode = 500
         body = "Error generating token or storing token. Ended with this error: " + str(e)
     
+
+
+    #a bit of code just to clean up the table. It will read the entire table,
+    #but each time a token is generated cleanup should happen, so it should not be too big a deal
+    ##################################
+    try:
+        #Before returning, let's run some quick table cleanup and delete any rows that have expired
+        expired_rows = token_table.scan(
+                FilterExpression=Attr("ExpiresAt").lt(int(time.time()))
+
+        )
+        rows_to_delete = expired_rows['Items']
+        with token_table.batch_writer() as batch:
+            for item in rows_to_delete:
+                batch.delete_item(
+                    Key = {
+                        'Token': item['Token']
+
+                    }
+                )
+    except:
+        print("failed to clean table, generating token anyways")
+    ##################################
+
     #return code based on what happened.
     return {
         "statusCode": statusCode,
