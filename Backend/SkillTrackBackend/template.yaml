@@ -355,6 +355,36 @@ Resources:
           TABLE_NAME: SkillTrackTable
 
 
+  CreateUserFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: CreateUser/
+      Handler: app.create_user
+      Runtime: python3.13
+      Architectures:
+        - x86_64
+      Events:
+        CreateUser:
+          Type: Api
+          Properties:
+            RestApiId: !Ref MyApi
+            Path: /CreateUser
+            Method: post
+      Policies:
+        - DynamoDBCrudPolicy:
+            TableName: SkillTrackTable
+        - Statement:
+          - Effect: Allow
+            Action:
+              - cognito-idp:AdminCreateUser
+              - cognito-idp:AdminSetUserPassword
+            Resource: !GetAtt MyCognitoUserPool.Arn
+      Environment:
+        Variables:
+          TABLE_NAME: SkillTrackTable
+          USER_POOL_ID: !Ref MyCognitoUserPool
+
+
   #----------------------------------------------------------------------ENDPOINT DEFINITION SECTION---------------------------------------------------------------------------------------#
 
 
