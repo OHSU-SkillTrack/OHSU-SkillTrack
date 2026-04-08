@@ -29,7 +29,7 @@ async function fetchUser() {
 export default function Index() {
     const [loading, setLoading] = useState(true)
     const [error, setError] = useState(false)
-    const [role, setRole] = useState<"Student" | "Teacher" | null>(null);
+    const [role, setRole] = useState<"Student" | "Teacher" | "Admin"| null>(null);
 
     useEffect(() => {
         async function loadUser() {
@@ -66,5 +66,9 @@ export default function Index() {
     if (role === "Teacher") {
         return <Redirect href="/(instructor)/(tabs)" />
     }
+    if (role === "Admin") {
+        return <Redirect href="/(admin)/(tabs)" />
+    }
+    
     return null
 }
