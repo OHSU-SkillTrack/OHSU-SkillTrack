@@ -132,6 +132,21 @@ const generalStyles = StyleSheet.create({
     fontSize: 17,
     fontWeight: '600',
   },
+
+  templateButton:{
+    marginTop: 20,
+    paddingHorizontal: 30,
+    paddingVertical: 12,
+    backgroundColor: '#ccc',
+    borderRadius: 10,
+    opacity: 0.3,
+  },
+
+  templateButtonText: {
+    color: '#000',
+    fontSize: 17,
+    fontWeight: 'bold',
+  },
   //-------------------- courses page -------------------- 
 
   // ------------------- skills page --------------------
