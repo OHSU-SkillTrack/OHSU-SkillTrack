@@ -35,9 +35,9 @@ export default function AdminTabs() {
 
 
             <Tabs.Screen
-                name="addStudents"
+                name="addUsers"
                 options={{
-                    title:"Add Students",
+                    title:"Add Users",
                     tabBarIcon: () => (
                         <Ionicons name="person-add-outline" size={30} color="#000000"/>
                     )
