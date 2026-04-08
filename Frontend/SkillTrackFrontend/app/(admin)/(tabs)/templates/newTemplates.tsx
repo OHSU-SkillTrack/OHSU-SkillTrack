@@ -18,7 +18,7 @@ export default function AddCourseScreen() {
     const [submitting, setSubmitting] = useState(false);
 
     async function handleAddCourse() {
-        if (!courseName || !courseCode || !courseDetails) {
+        if (!courseName || !courseCode ) {
             Alert.alert('Error', 'Please fill in all fields');
             return;
         }
@@ -33,15 +33,15 @@ export default function AddCourseScreen() {
                 throw new Error('No authentication token found');
             }
 
-            const res = await fetch(`${BASE_URL}/ThisGoesTheAPICALL`, {
+            const res = await fetch(`${BASE_URL}/CreateTemplate`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
                     'Authorization': token,
                 },
                 body: JSON.stringify({
-                    Course_Name: courseName,
-                    Course_Code: courseCode,
+                    ID: courseCode,
+                    Name: courseName,
                     Course_Details: courseDetails,
                 }),
             });
@@ -152,10 +152,10 @@ export default function AddCourseScreen() {
                 <Pressable
                     style={[
                         styles.templateButton,
-                        (!courseName || !courseCode || !courseDetails || submitting) && { opacity: 0.6 },
+                        (courseName && courseCode || submitting) && { opacity: 0.6 },
                     ]}
                     onPress={handleAddCourse}
-                    disabled={!courseName || !courseCode || !courseDetails || submitting}
+                    disabled={!courseName || !courseCode || submitting}
                 >
                     <AppText style={styles.templateButtonText}>
                         {submitting ? 'Creating Template...' : 'Create Template'}
