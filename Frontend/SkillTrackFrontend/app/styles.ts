@@ -8,6 +8,15 @@ const generalStyles = StyleSheet.create({
     paddingHorizontal: 20,
     paddingTop: 20,
   },
+
+  containerWithImage: {
+    flex: 1,
+    backgroundColor: '#FFFFFF',
+    paddingTop: 20,
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    alignItems: 'center' 
+  },
   
   // may need to update this because year isn't exactly centered
   headerContainer: {
@@ -46,6 +55,14 @@ const generalStyles = StyleSheet.create({
     paddingRight: 10,
   },
 
+  textInput:{
+    borderBottomWidth: 1,
+    borderBottomColor: '#ccc',
+    paddingVertical: 8,
+    marginBottom: 16,
+    textAlign:'center',
+  },
+
   listContent: {
     paddingBottom: 20,
   },
@@ -70,6 +87,22 @@ const generalStyles = StyleSheet.create({
     fontSize: 20,
     color: '#919191',
   },
+
+  imageFitWidthToPage:{
+    width: '90%',
+    aspectRatio: 16/9,
+    alignSelf: 'center'
+  },
+
+  generalButton:{
+    marginTop: 20,
+    paddingHorizontal: 30,
+    paddingVertical: 12,
+    backgroundColor: '#ccc',
+    borderRadius: 10
+  },
+
+
   // -------------------- general styles --------------------
 
   //-------------------- courses page -------------------- 
