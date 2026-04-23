@@ -4,8 +4,9 @@ import { AppText } from "@/components/AppText";
 interface Course {
     courseId: string
     courseName: string
-    totalSkills: number
-    completedSkills: number
+    totalSkills?: number
+    completedSkills?: number
+    studentCount: number
 }
 
 interface CourseCardProps {
@@ -21,6 +22,9 @@ function getProgressPercentage(complete: number, total: number) {
 }
 
 export const CourseCard: React.FC<CourseCardProps> = ({ course, onPress }: CourseCardProps) => {
+    // Determine if this is a student course or instructor course
+    const isStudentCourse = course.totalSkills !== undefined;
+    
     return (
         <Pressable
             style={styles.courseCard}
@@ -31,19 +35,24 @@ export const CourseCard: React.FC<CourseCardProps> = ({ course, onPress }: Cours
                     {course.courseName}
                 </AppText>
                 <AppText style={styles.skillsCompleteText}>
-                    {course.completedSkills}/{course.totalSkills} skills complete
+                    {isStudentCourse 
+                        ? `${course.completedSkills}/${course.totalSkills} skills complete`
+                        : `${course.studentCount} student${course.studentCount !== 1 ? 's' : ''}`
+                    }
                 </AppText>
             </View>
 
-            {/* May need to investigate how to replace progress bar with a completed check mark once a user has completed all tasks... */}
-            <View style={styles.progressBar}>
-                <View
-                    style={[
-                        styles.progressFill,
-                        { width: `${getProgressPercentage(course.completedSkills, course.totalSkills)}%` }
-                    ]}
-                />
-            </View>
+            {/* Progress bar only shown for student courses */}
+            {isStudentCourse && (
+                <View style={styles.progressBar}>
+                    <View
+                        style={[
+                            styles.progressFill,
+                            { width: `${getProgressPercentage(course.completedSkills || 0, course.totalSkills || 0)}%` }
+                        ]}
+                    />
+                </View>
+            )}
         </Pressable>
     )
 }
