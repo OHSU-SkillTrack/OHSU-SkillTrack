@@ -1,152 +1,251 @@
-import { fetchAuthSession } from 'aws-amplify/auth';
-
-import { FlatList, View } from "react-native";
-import { useEffect, useMemo, useState } from "react";
-
-import { BASE_URL } from '@/src/constants/api';
-
+// app/index.tsx
 import { AppText } from "@/components/AppText";
-import { SearchBar } from "@/components/ui/SearchBar";
-import { CourseCard } from "@/components/course/CourseCard";
-import { Header } from "@/components/ui/Header";
-import { LoadingScreen } from "@/components/ui/LoadingScreen";
+import { useState, useEffect, useCallback, useMemo } from 'react';
+import { View, Pressable, FlatList, TextInput, ScrollView } from 'react-native';
+import { fetchAuthSession } from 'aws-amplify/auth';
+import { BASE_URL } from '@/src/constants/api';
+import { useRouter, useLocalSearchParams } from 'expo-router';
+import generalStyles from "@/app/styles";
 
-import styles from "@/app/styles";
+import { Ionicons } from '@expo/vector-icons';
 
-interface SkillData {
-    CheckedOff: boolean;
-    CheckedOffBy?: string;
-    DateCheckedOff?: string;
-}
 
 interface Course {
-    courseId: string
-    courseName: string
-    totalSkills: number
-    completedSkills: number
+  courseId: string;
+  courseName: string;
+  totalSkills: number;
+  completedSkills: number;
+  // will have to remove year after aaron refactors stuff i think
+  // year: number;
+  skills: Array<{
+    skillName: string;
+    status: boolean;
+  }>;
 }
 
+interface SkillCheckInfo {
+  CheckedOff: boolean;
+  CheckedOffBy: string;
+  DateCheckedOff: string;
+}
+
+// Defines the structure of the student data returned by the API
+// Students have Years, which contain Courses, which contain Skills
+// NOTE: THIS MAY LOOK DIFFERENT AFTER AARON REMOVES YEARS
 interface StudentData {
-    Email: string
-    FirstName?: string | null
-    LastName?: string | null
-    Roles?: string | null
-    Courses?: Record<
-        string,
-        {
-            CourseName?: string
-            Skills?: Record<string, SkillData>
-        }
-    >;
+  Email: string;
+  FirstName?: string | null;
+  LastName?: string | null;
+  Roles?: string | null;
+
+  Courses?: Record<
+  string,
+  {
+    CourseName?: string;
+    Skills?: Record<string, SkillCheckInfo>;
+  }
+  >;
 }
 
-async function fetchUser() {
+export default function CourseListScreen() {
+  const [courses, setCourses] = useState<Course[]>([]);
+  const [searchQuery, setSearchQuery] = useState('');
+  const [loading, setLoading] = useState(true);
+  // const [selectedYear, setSelectedYear] = useState<number | null>(1);
 
-    const session = await fetchAuthSession()
-    const token = session.tokens?.idToken?.toString()
-    if (!token) {
-        throw new Error("No idToken found")
-    }
+  const router = useRouter();
+  
+  // Fetch data from API
+  const fetchCoursesData = useCallback(async () => {
+    try {
+      const session = await fetchAuthSession();
+      const token = session.tokens?.idToken?.toString();
+      
+      if (!token) {
+        console.error('No authentication token found');
+        setLoading(false);
+        return;
+      }
 
-    const response = await fetch(`${BASE_URL}/FetchUserData`, {
+      // calls the updated API endpoint
+      console.log('Fetching data from:', `${BASE_URL}/FetchUserData`);
+      const response = await fetch(`${BASE_URL}/FetchUserData`, {
         method: "GET",
         headers: {
-            "Content-Type": "application/json",
-            "Authorization": token
-        }
-    })
-    if (!response.ok) {
-        throw new Error("Failed to fetch user data")
+          "Content-Type": "application/json",
+          "Authorization": token,
+        },
+      });
+
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+
+      const data: StudentData = await response.json();
+      
+      // Process data into courses with progress
+      const allCourses: Course[] = [];
+      
+      // Process years data
+      // NOTE THIS WILL CHANGE AFTER AARON REMOVES YEARS
+      // const yearsObject = data.Years;
+      // process courses directly rather than through years now
+      const coursesObject = data.Courses;
+      
+
+      if (coursesObject && typeof coursesObject === 'object') {
+        Object.entries(coursesObject).forEach(([courseId, course]) => {
+          const courseName = course?.CourseName || 'Unnamed Course'; // in the case of a missing name... shouldn't happen ideally
+          const skills = course?.Skills || {}; // Default to empty object if no skills
+          const skillEntries = Object.entries(skills); // [ [skillName, status], ... ]
+          
+          // Count completed skills (status === true)
+          const completedCount = skillEntries.filter(
+            ([_, statusInfo]) => statusInfo.CheckedOff).length;
+
+          allCourses.push({
+            courseId,
+            courseName,
+            totalSkills: skillEntries.length,
+            completedSkills: completedCount,
+            // year: yearNum,
+            skills: skillEntries.map(([skillName, statusInfo]) => ({
+              skillName,
+              status: statusInfo.CheckedOff,
+            })),
+          });
+        });
+      }
+      // console.log('`Course: ${courseName}, Total: ${skillEntries.length}, Completed: ${completedCount}`');
+      console.log('Processed courses: ', allCourses);
+      
+      setCourses(allCourses);
+      setLoading(false);      
+    } catch (error) {
+      console.error('Error fetching courses:', error);
+      setLoading(false);
     }
-    return response.json()
-}
+  }, []);
 
-export default function Courses() {
-    const [error, setError] = useState(false)
-    const [loading, setLoading] = useState(true)
-    const [courses, setCourses] = useState<Course[]>([])
-    const [searchQuery, setSearchQuery] = useState('')
+  useEffect(() => {
+    fetchCoursesData();
+  }, [fetchCoursesData]);
 
-    useEffect(() => {
-        async function loadUser() {
-            try {
-                const user: StudentData = await fetchUser()
-                console.log(user)
+  // Filter courses based on search and year
+  // useMemo is more efficient because it only re-computes when courses, selectedYear, or searchQuery changes
+  // NOTE: WILL NEED TO UPDATE WHEN AARON REMOVES YEARS
+  const filteredCourses = useMemo(() => {
+    const q = searchQuery.trim().toLowerCase();
 
-                const courses = user.Courses
-                const coursesParsed: Course[] = []
+    if (!q) return courses;
 
-                if (!courses) {
-                    return
-                }
+    return courses.filter((c) => 
+      (c.courseName ?? '').toLowerCase().includes(q)
+    );
+  }, [courses, searchQuery]);
 
-                Object.entries(courses).forEach(([courseId, course]) => {
+  // handleCoursePress simply takes us to the path below where we have course information
+  const handleCoursePress = (course: Course) => {
+    router.push({
+      pathname: '/course/[id]',
+      params: { 
+        id: encodeURIComponent(course.courseName),
+        courseId: course.courseId,
+        totalSkills: course.totalSkills.toString(),
+        completedSkills: course.completedSkills.toString(),
+        skills: JSON.stringify(course.skills)
+      }
+    });
+  };
 
-                    const courseName = !course.CourseName ? "Unnamed course" : course.CourseName
-                    const skillsArr = Object.values(course.Skills ?? {});
-                    const totalSkills = skillsArr.length;
-                    const completedSkills = skillsArr.filter((s) => s.CheckedOff).length;
-                    
-                    const newCourse: Course = { courseId, courseName, totalSkills, completedSkills }
-                    coursesParsed.push(newCourse)
-                })
+  // we may do something like this for the profile page for total progress
+  const getProgressPercentage = (completed: number, total: number) => {
+    if (total === 0) return 0;
+    return Math.round((completed / total) * 100);
+  };
 
-                setCourses(coursesParsed)
-            }
-            catch (e) {
-                setError(true)
-                console.error("Failed to fetch user data", e)
-            }
-            finally {
-                setLoading(false)
-            }
-        }
-        loadUser()
-    }, [])
+  // 
+  const renderCourseItem = ({ item }: { item: Course }) => (
+    <Pressable 
+      style={generalStyles.courseCard}
+      onPress={() => handleCoursePress(item)}
+    >
+      <View style={generalStyles.courseHeader}>
+        <AppText style={generalStyles.cardNameText}>{item.courseName}</AppText>
 
-    const filteredCourses = useMemo(() => {
-        const q = searchQuery.trim().toLowerCase()
+          <AppText style={generalStyles.courseProgressText}>
+            {item.completedSkills}/{item.totalSkills} skills complete
+          </AppText>
+      </View>
+      
+      {/* May need to investigate how to replace progress bar with a completed check mark once a user has completed all tasks... */}
+      <View style={generalStyles.progressBar}>
+        <View 
+          style={[
+            generalStyles.progressFill,
+            { width: `${getProgressPercentage(item.completedSkills, item.totalSkills)}%` }
+          ]}
+        />
+      </View>
+    </Pressable>
+  );
 
-        if (!q) {
-            return courses
-        }
-        return courses.filter((c) =>
-            (c.courseName ?? '').toLowerCase().includes(q)
-        )
-    }, [courses, searchQuery])
-
-    function handleCoursePress(course: Course) {
-        return
-    }
-
-    const renderCourse = ({ item }: { item: Course }) => {
-        return (
-            <CourseCard course={item} onPress={handleCoursePress} />
-        )
-    }
-
-    if (loading) {
-        return (
-            <LoadingScreen />
-        )
-    }
-
-    if (error) {
-        return (
-            <AppText>Error. Can't fetch data</AppText>
-        )
-    }
-
+  // loading state... we should probably update this it lwk doesn't look very good
+  if (loading) {
     return (
-        <View>
-            <Header text="My Courses" backArrow={false} />
-            <SearchBar value={searchQuery} onChange={setSearchQuery} />
-            <FlatList
-                data={filteredCourses}
-                renderItem={renderCourse}
-                keyExtractor={(item) => `${item.courseId}`}
-                contentContainerStyle={styles.listContent}
-                showsVerticalScrollIndicator={false} />
+      <View style={generalStyles.loadingContainer}>
+        <AppText style={generalStyles.loadingText}>Loading courses...</AppText>
+        <Pressable style={generalStyles.refreshButton} onPress={fetchCoursesData}>
+          <AppText style={generalStyles.refreshButtonText}>Refresh</AppText>
+        </Pressable>
+      </View>
+    );
+  }
+
+  return (
+    <View style={generalStyles.container}>
+      {/* Header with logout button */}
+      <View style={generalStyles.headerContainer}>
+      
+      {/* just a spacer here for now, although it leaves "SkillTrack" uncentered */}
+      <View />
+        <AppText style={generalStyles.headerTitle}>
+          SkillTrack
+        </AppText>
+        <Ionicons name="checkmark-circle-outline" size={40} color="#2F6BFF" />
+      </View>
+      
+      {/* Search Bar */}
+      <View style={generalStyles.searchContainer}>
+        <TextInput
+          style={generalStyles.searchInput}
+          placeholder="Search"
+          placeholderTextColor="#8E8E93"
+          value={searchQuery}
+          onChangeText={setSearchQuery}
+        />
+        <Ionicons name="search" size={30} color="#9AA0A6" />
+      </View>
+      
+      {/* Courses List */}
+      {filteredCourses.length === 0 ? (
+        <View style={generalStyles.emptyState}>
+          {/* clear use of AI btw */}
+          <AppText style={generalStyles.emptyStateIcon}>📚</AppText> 
+          <AppText style={generalStyles.emptyStateTitle}>No courses found!</AppText>
+          <AppText style={generalStyles.emptyStateText}>
+            {searchQuery ? "Try adjusting your search" : "No courses available"}
+          </AppText>
         </View>
-    )
+      ) : (
+        <FlatList
+          data={filteredCourses}
+          renderItem={renderCourseItem}
+          keyExtractor={(item) => `${item.courseId}`}
+          contentContainerStyle={generalStyles.listContent}
+          showsVerticalScrollIndicator={false}
+        />
+      )}
+    </View>
+  );
 }

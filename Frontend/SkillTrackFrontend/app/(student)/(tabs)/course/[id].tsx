@@ -2,7 +2,7 @@ import { useState, useEffect, useMemo, useCallback } from 'react';
 import { View, Pressable, FlatList, TextInput, ScrollView } from 'react-native';
 import { fetchAuthSession } from 'aws-amplify/auth';
 import { useLocalSearchParams, useRouter } from 'expo-router';
-import { BASE_URL } from '../../../src/constants/api';
+import { BASE_URL } from '@/src/constants/api';
 import generalStyles from '@/app/styles';
 import { Ionicons } from '@expo/vector-icons';
 import { AppText } from '@/components/AppText'
