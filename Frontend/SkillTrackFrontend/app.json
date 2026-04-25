@@ -31,7 +31,8 @@
       "output": "static",
       "favicon": "./assets/images/favicon.png"
     },
-    "plugins": [
+    "plugins": 
+    [
       "expo-router",
       [
         "expo-splash-screen",
@@ -48,9 +49,10 @@
       [
         "expo-camera",
         {
-          "cameraPermission": "Allow SkillTrack to access your camera",
-          "microphonePermission": "Allow SkillTrack to access your microphone",
-          "recordAudioAndroid": false
+          "cameraPermission": "Allow $(PRODUCT_NAME) to access your camera",
+          "microphonePermission": "Allow $(PRODUCT_NAME) to access your microphone",
+          "recordAudioAndroid": true,
+          "barcodeScannerEnabled": true
         }
       ]
     ],
