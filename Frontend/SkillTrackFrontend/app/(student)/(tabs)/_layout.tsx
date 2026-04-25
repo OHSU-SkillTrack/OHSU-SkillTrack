@@ -94,4 +94,4 @@ export default function TabsLayout() {
 
 
 
-//There are three nab screens to name: profile, courses, and resources
+//There are three screens to name: profile, courses, and resources
