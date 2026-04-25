@@ -67,6 +67,21 @@ const generalStyles = StyleSheet.create({
     paddingBottom: 20,
   },
 
+  // may want to update to be black?
+  loadingContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: '#FFFFFF',
+  },
+
+  loadingText: {
+    fontSize: 32,
+    fontWeight: 'bold',
+    color: '#4972FF',
+    marginBottom: 4,
+  },
+
   // styling for course name and skill names
   cardNameText: {
     fontSize: 20,
@@ -74,6 +89,33 @@ const generalStyles = StyleSheet.create({
     color: '#000000',
     flex: 1,
     marginRight: 12,
+  },
+
+  emptyState: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginTop: 60,
+  },
+
+  emptyStateIcon: {
+    fontSize: 48,
+    marginBottom: 16,
+    color: '#8E8E93',
+  },
+
+  emptyStateTitle: {
+    fontSize: 22,
+    fontWeight: '600',
+    color: '#000000',
+    marginBottom: 8,
+  },
+
+  emptyStateText: {
+    fontSize: 17,
+    color: '#8E8E93',
+    textAlign: 'center',
+    paddingHorizontal: 40,
   },
 
   emptySearchContainer: {
