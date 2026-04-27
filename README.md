@@ -22,6 +22,8 @@ To run this application distict elements you must know about the **backend** and
 Before you continue these steps clone this reposity to your local development enviornment. We have had some issues with paths being too long in the past, so we recommend cloning the repo as close your root directyry as possible, So on windows clone it to C:\<CLONED-REPO>, or if you have additional drives on your computer you can clone them to the root of that drive instead too. ie. D:\<CLONED-REPO>
 
 ## Setting Up the Backend
+
+### Setting up prerequisites
 The backend for this application is fully managed on Amazon Web Services (AWS). You will need an AWS account. You can create one here: https://aws.amazon.com/.
 We highly recommend creating a admin IAM user to do the majority of operations from here on out rather than directly using the root account. Please read this article on how to do that https://docs.aws.amazon.com/streams/latest/dev/setting-up.html 
 
@@ -36,11 +38,12 @@ Next you will need to install AWS and SAM CLI. Follow these two links to install
 You may need to restart your computer after installing these to ensure they are fully installed, we recommend doing it regardless just for good measure.
 
 Now open a command terminal of your choice on your computer and enter the command _aws configure_. You will be prompted for an **Access Key ID** and a **Secret Access Key** these are the values from the earlier tab you should still have open. Bring that tab back and copy and paste those values into the command terminal as the prompts ask you for them. You may be asked for other information as well such as a default region. You may select a default region, the main thing is to be consistant int terms of what region you will want to preform actions in. _us-east-2_ and _us-east-1_ for example are popular regions.
+Please note that the Access Key and Secret Key **must be kept secret**. They provide the same account access that being logged into the AWS website would. Never put these keys into a shared environment such as a code repository (especially a public code repository) or a shared google doc for example. As a general security principle we also recommend deleting and regenerating the keys every once in a while (rotating them). We also recommend only having the key active when you are actively developing code(or launching the backend for the first time, as we are doing now). You can otherwise deactivate the key in the same Security Credentials menu if you think you'll need it at soon, or delete it outright if you won't be doing any re-deployments/code development anytime soon.
 
 You have all the prerequisites in place now, nice job! Now we can move on to deploying the backend.
 
-
-
+### Deploying the backend (The fun part)
+On your command line interface, navigate to 
 
 
 **Optional Readings** (read this if you would like more in depth understanding of how the backend works. If you only want to setup the backend you can just skip this section.) 
