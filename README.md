@@ -11,6 +11,16 @@ Aaron Pina - pinarama@oregonstate.edu
 Benjamin Kono - konob@oregonstate.edu
 
 # Project Description and Value Proposition
+**SkillTrack** is a mobile app designed for nursing students and instructors at OHSU to efficiently track, verify, and showcase learned clinical skills, replacing outdated paper checklists with a secure, organized, and accessible digital platform.
+
+**The Problem:**  
+Nursing programs often rely on paper-based systems to record student competencies, leading to lost records, inefficiency, and difficulty in quickly verifying which skills a student has mastered. This can delay clinical assignments and create uncertainty for both students and instructors.
+
+**Our Solution:**  
+SkillTrack streamlines skill tracking by providing a centralized, digital record accessible from any mobile device. Students can instantly view their progress, while instructors can verify and check off competencies in real time, even using QR codes for rapid validation. This ensures that everyone always knows which skills have been completed, improving safety and confidence in clinical settings.
+
+**Why It Matters:**  
+By eliminating paperwork and making skill records instantly available, SkillTrack saves time, reduces errors, and empowers students to take charge of their learning. Instructors benefit from simplified administration and more reliable data.
 
 # Key Features or Highlights
 
