@@ -142,17 +142,19 @@ You will need to have nodejs installed on your computer, you can install it here
 
 There are two files you will need to add to your cloned repository.  
 
-**First File**
-
+**First File** <br>
 First login to the AWS console on the web again and go to API Gateway > APIs > SkillTrackBackend > Stages and locate the invoke URL. Copy this URL.
-<img width="1907" height="841" alt="image" src="https://github.com/user-attachments/assets/4be5695c-a2fe-4f15-a7d5-48e138f0988f" />
+
+<img width="500" alt="image" src="https://github.com/user-attachments/assets/4be5695c-a2fe-4f15-a7d5-48e138f0988f" />
 Next, find the location of the example-api.ts file: Frontend/SkillTrackFrontend/src/constants/example-api.ts
 Create a copy of this file and place it in the same constants folder, but name this copy: api.ts.
 Replace the https://example.com/api text with the URL you copied from the 
+<br>
+<br>
 
 
-**First** 
-* 
+**Second File** <br>
+
 
 
 
