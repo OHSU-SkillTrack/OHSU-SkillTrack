@@ -186,9 +186,12 @@ Locate where the above image shows the green circle, where the User Pool ID is. 
 
 Next, for the aws_user_pools_id directly copy and past the full User pool ID from the above green circle.
 
-Next you will fill in the aws_user_pools_web_client_id field. Go do the App clients tab and copy and paste the Client ID value. 
+Next you will fill in the aws_user_pools_web_client_id field. Go do the App clients tab and copy and paste the Client ID value. See the below image
+<img width="1739" height="451" alt="image" src="https://github.com/user-attachments/assets/9eb0b5b0-4db8-4a5f-9d88-3e198fe98755" />
 
-Finally, for the domain, go to the Domain tab under branding and copy and paste the domain value. You may have to create this if is not already there.
+Finally, for the domain, go to the Domain tab under branding and copy and paste the domain value. You may have to create this if is not already there. 
+
+Save changes in the file and you should be finished with this part!
 
 
 
