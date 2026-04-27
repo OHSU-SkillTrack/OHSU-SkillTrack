@@ -10,6 +10,8 @@ Russell Hueso - huesor@oregonstate.edu
 Aaron Pina - pinarama@oregonstate.edu  
 Benjamin Kono - konob@oregonstate.edu
 
+Feel free to contact any of us through the above emails with any questions or feedback! 😊
+
 # Project Description and Value Proposition
 **SkillTrack** is a mobile app designed for nursing students and instructors at OHSU to efficiently track, verify, and showcase learned clinical skills, replacing outdated paper checklists with a secure, organized, and accessible digital platform.
 
@@ -138,10 +140,26 @@ Finally it is HIGHLY recommended you go to the AWS Console website and go to: AP
 You will need to have nodejs installed on your computer, you can install it here.
 * https://nodejs.org
 
+There are two files you will need to add to your cloned repository.  
+
+**First File**
+
+First login to the AWS console on the web again and go to API Gateway > APIs > SkillTrackBackend > Stages and locate the invoke URL. Copy this URL.
+<img width="1907" height="841" alt="image" src="https://github.com/user-attachments/assets/4be5695c-a2fe-4f15-a7d5-48e138f0988f" />
+Next, find the location of the example-api.ts file: Frontend/SkillTrackFrontend/src/constants/example-api.ts
+Create a copy of this file and place it in the same constants folder, but name this copy: api.ts.
+Replace the https://example.com/api text with the URL you copied from the 
+
+
+**First** 
+* 
+
+
+
+
 ### Launching the Frontend (The fun part)
 Open a command terminal. On your command line interface, navigate to the location where you have this repository located. Then further go in with the cd command until you are in the OHSU-SkillTrack/Backend/SkillTrackFrontend folder. You should see something like this:
 <img width="500"  alt="image" src="https://github.com/user-attachments/assets/f2a23629-5326-49eb-9388-e476a0e7b1e5" />
-
 
 Here, run the command: _npm i_
 
