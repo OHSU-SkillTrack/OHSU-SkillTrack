@@ -33,12 +33,17 @@ Next you will need to install AWS and SAM CLI. Follow these two links to install
 * https://docs.aws.amazon.com/cli/latest/userguide/getting-started-install.html
 * https://docs.aws.amazon.com/serverless-application-model/latest/developerguide/install-sam-cli.html
 
+You may need to restart your computer after installing these to ensure they are fully installed, we recommend doing it regardless just for good measure.
+
+Now open a command terminal of your choice on your computer and enter the command _aws configure_. You will be prompted for an **Access Key ID** and a **Secret Access Key** these are the values from the earlier tab you should still have open. Bring that tab back and copy and paste those values into the command terminal as the prompts ask you for them. You may be asked for other information as well such as a default region. You may select a default region, the main thing is to be consistant int terms of what region you will want to preform actions in. _us-east-2_ and _us-east-1_ for example are popular regions.
+
+You have all the prerequisites in place now, nice job! Now we can move on to deploying the backend.
 
 
 
 
 
-**Extra Notes** (read this if you would like more in depth understanding of how the backend works. If you only want to setup the backend you can just skip this section.) 
+**Optional Readings** (read this if you would like more in depth understanding of how the backend works. If you only want to setup the backend you can just skip this section.) 
 
 ## Setting Up the Frontend
 
