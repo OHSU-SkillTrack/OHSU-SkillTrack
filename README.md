@@ -139,14 +139,17 @@ You will need to have nodejs installed on your computer, you can install it here
 * https://nodejs.org
 
 ### Launching the Frontend (The fun part)
+Open a command terminal. On your command line interface, navigate to the location where you have this repository located. Then further go in with the cd command until you are in the OHSU-SkillTrack/Backend/SkillTrackFrontend folder. You should see something like this:
+(INSERT PHOTO)
 
+Here, run the command: _npm i_
 
+After that process finished you can run the command: _npx expo start_
 
-.....
+The command line dialog should generate a url that looks something like this: http//localhost:8081.
+You can open that URL in a web browser and you are in the app! This will let you view the app in the browser. This should work for initial viewing, but the app is optimized for mobile viewing. If you are satisfied with this browser view you can stop now. But if you would like to get the mobile view (we recommend using the mobile view if you are actually going to continue development of the app) read onwords:
 
-This will let you view the app in the browser. This should work for initial viewing, but the app is optimized for mobile viewing. If you are satisfied with this browser view you can stop now. But if you would like to get the mobile view (we recommend using the mobile view if you are actually going to continue development of the app) read onwords:
-
-You will need to prepare your testing environment. Follow this link and select the particular (mobile) enviornment you would like to develop code in: https://docs.expo.dev/get-started/set-up-your-environment/?mode=development-build&platform=android&device=simulated&buildEnv=local
+You will need to prepare your **mobile testing** environment. Follow this link and select the particular enviornment you would like to develop code in: https://docs.expo.dev/get-started/set-up-your-environment/?mode=development-build&platform=android&device=simulated&buildEnv=local
 * The current pre selected options on the above link are for an android emulator running on Windows. But select which ever options you would like to work with. Please note that Development build **must** be one of the selected optoins. This will not work with Expo Go.
 
 <img width="500"  alt="image" src="https://github.com/user-attachments/assets/91b04530-93d9-474d-b8e5-2651515d65e2" />
