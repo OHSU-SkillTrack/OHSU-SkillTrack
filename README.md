@@ -52,6 +52,18 @@ you will now run two commands in this order:
 * _sam deploy_
   * You may instead run _sam deploy guided_ if you would like to customize certain aspects such as the name of the stack that will be deployed on AWS (it will default to SkillTrackBackend if you don't change this) or the AWS region it is deployed to. (it will default to us-east-2).
 
+Follow the on screen prompt, you may have to allow it to create a bucket to upload the files we are trying to deploy. If everything goes correctly you will have sucessfully deployed the backend. Good job!
+Note that if you decide you want to make changes to the backend code yourself, to deploy changes you will need to run **sam build** first, and then **sam deploy**, each time
+
+If you **at any moment** want to take the backend down you can very quickly do it by running this command: 
+* sam delete --stack-name "skilltrackbackend". 
+
+If you prefer the website UI interface you can also do it there. Follow the instructions here to do that:
+* https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/cfn-console-delete-stack.html
+
+
+If everything worked you can now skip to the Frontend Section, or you may scroll down to the optional readings if you would like to know some more about how the backend works behind the scenes.
+
 ⚠️ Potential issue: You must have python installed. If you don't you may have an error. It must also be version 3.13 (newer version may work, but we are certain that 3.13 does work). If you arleady have python installed and you are on windows, ensure that in your system Envionment variables python is in the path. You should see something like this:
 
 <img width="450" alt="image" src="https://github.com/user-attachments/assets/ce44cac6-0922-40be-807a-13dbff7f971b" />
@@ -73,7 +85,15 @@ Ensure these two red circled lines are there. If you do not one or both, you can
 
 
 
-**Optional Readings** (read this if you would like more in depth understanding of how the backend works. If you only want to setup the backend you can just skip this section.) 
+### Optional Reading
+(read this if you would like more in depth understanding of how the backend works, for example if you want to modify the backend code yourself. If you only want to deploy the backend you can just skip this section.) 
+
+The most imporant file in the backend is the template.yaml file in OHSU-SkillTrack/Backend/SkillTrackBackend. This file fundamentally described all resources we are deploying onto AWS every time we run _sam build_ and _sam deploy_. The basic structure is a Gateway+Lambda combination for the API endpoint creation. And each Gateway endpoint is password protected by AWS Cognito (view the architecture document also in this repo for more information). The main modifications you may be interested in making are creating new endpoints or renaming the Cognito User Pool and Client (they are called MyUserPool and MuUserPoolClient which are a bit generic, and you can feel free to change them if you'd like). For creating new endpoints we generally recommend following the format of the other endpoints that are already there in the ENDPOINT DEFINITION SECTION. When messing with this file the most important thing to be mindful of is to not accidentaly remove the Auth Section of the API definition at the top. This ensures that the API endpoints are protected and only authorized users can call them.
+
+Finally it is HIGHLY recommended you go to the AWS Console website and go to: API Gateway > APIs > SkillTrackBackend > Stages and ensure CloudWatch logs are active. You may have to turn this on manually, and it usually disables itself everytime you redeploy the backend. This ensures you can diagnose any problems if you discover them.
+<img width="1915" height="870" alt="image" src="https://github.com/user-attachments/assets/75ab378e-7534-4bca-9048-3422e6e512be" />
+
+
 
 ## Setting Up the Frontend
 
