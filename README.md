@@ -140,7 +140,8 @@ You will need to have nodejs installed on your computer, you can install it here
 
 ### Launching the Frontend (The fun part)
 Open a command terminal. On your command line interface, navigate to the location where you have this repository located. Then further go in with the cd command until you are in the OHSU-SkillTrack/Backend/SkillTrackFrontend folder. You should see something like this:
-(INSERT PHOTO)
+<img width="500"  alt="image" src="https://github.com/user-attachments/assets/f2a23629-5326-49eb-9388-e476a0e7b1e5" />
+
 
 Here, run the command: _npm i_
 
