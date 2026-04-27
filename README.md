@@ -48,6 +48,9 @@ Faculty members can create new course sections using predefined templates, reduc
 - **Manage course templates across the program**  
 Administrators can create, edit, and maintain course templates that define required skills and skill details for OHSU nursing courses.
 
+- **Student onboarding with CSV upload**  
+Administrators can upload a CSV file of student information to automatically create accounts and pre-populate course enrollments and skill information.
+
 # How to Access or Try It
 We make the code fully available in this repository for you to run your own instance of the app and create your own derived work based on this app if you wish.
 
