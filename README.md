@@ -54,7 +54,7 @@ Administrators can create, edit, and maintain course templates that define requi
 Administrators can upload a CSV file of student information to automatically create accounts and pre-populate course enrollments and skill information.
 
 ## Video Demo
-Here is a walkthrough video demonstrating the application, including perspectives from both a student and an instructor, highlighting its key features and overall purpose.[Watch our demo](https://drive.google.com/file/d/1Y80GgYnAuw2M1uCTpafsPnMLDj5qolWM/view?usp=share_link)
+[Watch our demo](https://drive.google.com/file/d/1Y80GgYnAuw2M1uCTpafsPnMLDj5qolWM/view?usp=share_link)
 
 # How to Access or Try It
 We make the code fully available in this repository for you to run your own instance of the app and create your own derived work based on this app if you wish.
