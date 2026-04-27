@@ -43,7 +43,7 @@ Please note that the Access Key and Secret Key **must be kept secret**. They pro
 You have all the prerequisites in place now, nice job! Now we can move on to deploying the backend.
 
 ### Deploying the backend (The fun part)
-On your command line interface, navigate to 
+On your command line interface, navigate to the location where you have this repository located. Then further go in with the cd command until you are in the OHSU-SkillTrack/Backend/SkillTrackBackend folder. You should see something like this:
 
 
 **Optional Readings** (read this if you would like more in depth understanding of how the backend works. If you only want to setup the backend you can just skip this section.) 
