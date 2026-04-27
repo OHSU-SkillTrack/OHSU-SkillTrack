@@ -44,6 +44,7 @@ You have all the prerequisites in place now, nice job! Now we can move on to dep
 
 ### Deploying the backend (The fun part)
 On your command line interface, navigate to the location where you have this repository located. Then further go in with the cd command until you are in the OHSU-SkillTrack/Backend/SkillTrackBackend folder. You should see something like this:
+<img width="1030" height="124" alt="image" src="https://github.com/user-attachments/assets/53374b72-c4ef-48b5-9e82-08647feb1a4a" />
 
 
 **Optional Readings** (read this if you would like more in depth understanding of how the backend works. If you only want to setup the backend you can just skip this section.) 
