@@ -99,4 +99,30 @@ Finally it is HIGHLY recommended you go to the AWS Console website and go to: AP
 
 ## Setting Up the Frontend
 
+### Setting up prerequisites
+You will need to have nodejs installed on your computer, you can install it here.
+* https://nodejs.org
+
+### Launching the Frontend (The fun part)
+
+
+
+.....
+
+This will let you view the app in the browser. This should work for initial viewing, but the app is optimized for mobile viewing. If you are satisfied with this browser view you can stop now. But if you would like to get the mobile view (we recommend using the mobile view if you are actually going to continue development of the app) read onwords:
+
+You will need to prepare your testing environment. Follow this link and select the particular (mobile) enviornment you would like to develop code in: https://docs.expo.dev/get-started/set-up-your-environment/?mode=development-build&platform=android&device=simulated&buildEnv=local
+* The current pre selected options on the above link are for an android emulator running on Windows. But select which ever options you would like to work with. Please note that Development build **must** be one of the selected optoins. This will not work with Expo Go.
+
+<img width="500"  alt="image" src="https://github.com/user-attachments/assets/91b04530-93d9-474d-b8e5-2651515d65e2" />
+<br>
+<img width="500"  alt="image" src="https://github.com/user-attachments/assets/88657544-b650-48a9-8248-c25145728672" />
+
+We also recommend not doing it with the EAS build setting turned on unless you are currently seeking to deploy the app to the app stores.
+
+Ensure that you select the operating system your computer is on if given the option to choose.
+<img width="500"  alt="image" src="https://github.com/user-attachments/assets/6394f3a9-44a7-4117-b3bb-98f166896028" />
+
+
+
 ## Putting It All Together
