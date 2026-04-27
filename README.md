@@ -181,6 +181,8 @@ In the OHSU-SkillTrack\Frontend\SkillTrackFrontend\src location, create a new fi
 ```
 
 
+<img width="1307" height="418" alt="image" src="https://github.com/user-attachments/assets/dc888dbd-59db-4429-a69a-b1b1723d43f0" />
+
 
 
 
