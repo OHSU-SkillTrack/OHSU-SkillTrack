@@ -24,7 +24,29 @@ By eliminating paperwork and making skill records instantly available, SkillTrac
 
 # Key Features or Highlights
 
+## Students
+- **Track skill progress**  
+Students can view the courses they are currently enrolled in and see every required nursing skill for each course, including whether each skill has been approved or has yet to be completed.
 
+- **Personal QR code for fast check off**  
+Each student has a unique QR code on their profile page that instructors can scan to instantly access the student’s information and approve demonstrated skills.
+
+- **Built-in drug information resources**  
+Students can access a resources page containing drug reference information that was previously stored on paper flashcards, making drug information easier to organize and access.
+
+## Instructors
+- **Quick skill approvals with built-in camera**  
+Instructors can use the in-app camera scanner to scan student QR codes, view relevant course information, and efficiently check off students' completed skills.
+
+- **Manage courses and student progress**  
+Instructors can view the courses they are teaching, see enrolled students, and monitor each student’s progress in one location.
+
+- **Create courses from templates**  
+Faculty members can create new course sections using predefined templates, reducing setup time and ensuring consistency across classes.
+
+## Administrators
+- **Manage course templates across the program**  
+Administrators can create, edit, and maintain course templates that define required skills and skill details for OHSU nursing courses.
 
 # How to Access or Try It
 We make the code fully available in this repository for you to run your own instance of the app and create your own derived work based on this app if you wish.
