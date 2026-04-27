@@ -180,8 +180,16 @@ In the OHSU-SkillTrack\Frontend\SkillTrackFrontend\src location, create a new fi
 }
 ```
 
-
+Navigate to Amazon Cognito > User > MyUserPool > Overview (or if you renamed the user pool go to whatever you named it)
 <img width="1307" height="418" alt="image" src="https://github.com/user-attachments/assets/dc888dbd-59db-4429-a69a-b1b1723d43f0" />
+Locate where the above image shows the green circle, where the User Pool ID is. Take the first part, what the region is and put that in the aws_project_region and aws_cognito_region. So it might be us-east2, or us-east1, or one of the other regions depending on what you have selected depending on what you have configured.
+
+Next, for the aws_user_pools_id directly copy and past the full User pool ID from the above green circle.
+
+Next you will fill in the aws_user_pools_web_client_id field. Go do the App clients tab and copy and paste the Client ID value. 
+
+Finally, for the domain, go to the Domain tab under branding and copy and paste the domain value. You may have to create this if is not already there.
+
 
 
 
