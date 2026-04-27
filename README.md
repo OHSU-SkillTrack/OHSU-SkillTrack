@@ -78,7 +78,7 @@ Next you will need to install AWS and SAM CLI. Follow these two links to install
 
 You may need to restart your computer after installing these to ensure they are fully installed, we recommend doing it regardless just for good measure.
 
-Now open a command terminal of your choice on your computer and enter the command _aws configure_. You will be prompted for an **Access Key ID** and a **Secret Access Key** these are the values from the earlier tab you should still have open. Bring that tab back and copy and paste those values into the command terminal as the prompts ask you for them. You may be asked for other information as well such as a default region. You may select a default region, the main thing is to be consistant int terms of what region you will want to preform actions in. _us-east-2_ and _us-east-1_ for example are popular regions.
+Now open a command terminal of your choice on your computer and enter the command `aws configure`. You will be prompted for an **Access Key ID** and a **Secret Access Key** these are the values from the earlier tab you should still have open. Bring that tab back and copy and paste those values into the command terminal as the prompts ask you for them. You may be asked for other information as well such as a default region. You may select a default region, the main thing is to be consistant int terms of what region you will want to preform actions in. _us-east-2_ and _us-east-1_ for example are popular regions.
 Please note that the Access Key and Secret Key **must be kept secret**. They provide the same account access that being logged into the AWS website would. Never put these keys into a shared environment such as a code repository (especially a public code repository) or a shared google doc for example. As a general security principle we also recommend deleting and regenerating the keys every once in a while (rotating them). We also recommend only having the key active when you are actively developing code(or launching the backend for the first time, as we are doing now). You can otherwise deactivate the key in the same Security Credentials menu if you think you'll need it at soon, or delete it outright if you won't be doing any re-deployments/code development anytime soon.
 
 You have all the prerequisites in place now, nice job! Now we can move on to deploying the backend.
@@ -87,15 +87,15 @@ You have all the prerequisites in place now, nice job! Now we can move on to dep
 On your command line interface, navigate to the location where you have this repository located. Then further go in with the cd command until you are in the OHSU-SkillTrack/Backend/SkillTrackBackend folder. You should see something like this:
 <img width="1030" height="124" alt="image" src="https://github.com/user-attachments/assets/53374b72-c4ef-48b5-9e82-08647feb1a4a" />
 you will now run two commands in this order:
-* _sam build_
-* _sam deploy_
-  * You may instead run _sam deploy guided_ if you would like to customize certain aspects such as the name of the stack that will be deployed on AWS (it will default to SkillTrackBackend if you don't change this) or the AWS region it is deployed to. (it will default to us-east-2).
+* `sam build`
+* `sam deploy`
+  * You may instead run `sam deploy guided` if you would like to customize certain aspects such as the name of the stack that will be deployed on AWS (it will default to SkillTrackBackend if you don't change this) or the AWS region it is deployed to. (it will default to us-east-2).
 
 Follow the on screen prompt, you may have to allow it to create a bucket to upload the files we are trying to deploy. If everything goes correctly you will have sucessfully deployed the backend. Good job!
 Note that if you decide you want to make changes to the backend code yourself, to deploy changes you will need to run **sam build** first, and then **sam deploy**, each time
 
 If you **at any moment** want to take the backend down you can very quickly do it by running this command: 
-* sam delete --stack-name "skilltrackbackend". 
+* `sam delete --stack-name "skilltrackbackend"`
 
 If you prefer the website UI interface you can also do it there. Follow the instructions here to do that:
 * https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/cfn-console-delete-stack.html
@@ -201,15 +201,15 @@ Save changes in the file and you should be finished with this part!
 Open a command terminal. On your command line interface, navigate to the location where you have this repository located. Then further go in with the cd command until you are in the OHSU-SkillTrack/Backend/SkillTrackFrontend folder. You should see something like this:
 <img width="500"  alt="image" src="https://github.com/user-attachments/assets/f2a23629-5326-49eb-9388-e476a0e7b1e5" />
 
-Here, run the command: _npm i_
+Here, run the command: `npm i`
 
-After that process finished you can run the command: _npx expo start_
+After that process finished you can run the command: `npx expo start`
 
 The command line dialog should generate a url that looks something like this: http//localhost:8081.
 You can open that URL in a web browser and you are in the app! This will let you view the app in the browser. This should work for initial viewing, but the app is optimized for mobile viewing. If you are satisfied with this browser view you can stop now. But if you would like to get the mobile view (we recommend using the mobile view if you are actually going to continue development of the app) read onwords:
 
 You will need to prepare your **mobile testing** environment. Follow this link and select the particular enviornment you would like to develop code in: https://docs.expo.dev/get-started/set-up-your-environment/?mode=development-build&platform=android&device=simulated&buildEnv=local
-* The current pre selected options on the above link are for an android emulator running on Windows. But select which ever options you would like to work with. Please note that Development build **must** be one of the selected optoins. This will not work with Expo Go.
+* The current pre selected options on the above link are for an android emulator running on Windows. But select which ever options you would like to work with. Please note that Development build **must** be one of the selected options. This will not work with Expo Go.
 
 <img width="500"  alt="image" src="https://github.com/user-attachments/assets/91b04530-93d9-474d-b8e5-2651515d65e2" />
 <br>
@@ -220,7 +220,7 @@ We also recommend not doing it with the EAS build setting turned on unless you a
 Ensure that you select the operating system your computer is on if given the option to choose.
 <img width="500"  alt="image" src="https://github.com/user-attachments/assets/6394f3a9-44a7-4117-b3bb-98f166896028" />
 
-
+Once you have followed the steps from those instructions should be able to just run the app! For example to run it on an android emulator you would run the `npx expo run:android` command
 
 ## Putting It All Together
 Here is a walkthrough video demonstrating the application, including perspectives from both a student and an instructor, highlighting its key features and overall purpose.[Watch our demo](https://drive.google.com/file/d/1Y80GgYnAuw2M1uCTpafsPnMLDj5qolWM/view?usp=share_link)
