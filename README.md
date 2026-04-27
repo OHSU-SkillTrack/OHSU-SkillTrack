@@ -10,7 +10,9 @@ Russell Hueso - huesor@oregonstate.edu
 Aaron Pina - pinarama@oregonstate.edu  
 Benjamin Kono - konob@oregonstate.edu
 
+# Project Description and Value Proposition
 
+# Key Features or Highlights
 
 
 
