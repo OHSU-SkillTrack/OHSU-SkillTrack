@@ -4,11 +4,11 @@ CS Senior Capstone Project
 SkillTrack is a cross-platform (iOS and Android) mobile application designed to help nursing students and instructors easily evaluate and track their learned nursing skills.
 
 Team Roster  
-Elizabeth Stahlke - stahlkee@oregonstate.edu  
-Antonio Rodriguez - rodriant@oregonstate.edu  
-Russell Hueso - huesor@oregonstate.edu  
-Aaron Pina - pinarama@oregonstate.edu  
-Benjamin Kono - konob@oregonstate.edu
+Elizabeth Stahlke - stahlkee@oregonstate.edu - Front End Developer  
+Antonio Rodriguez - rodriant@oregonstate.edu - Full Stack Developer  
+Russell Hueso     - huesor@oregonstate.edu - Full Stack Developer  
+Aaron Pina        - pinarama@oregonstate.edu - Back End Architect  
+Benjamin Kono     - konob@oregonstate.edu - Front End Developer  
 
 Feel free to contact any of us through the above emails with any questions or feedback! 😊
 
