@@ -165,3 +165,5 @@ Ensure that you select the operating system your computer is on if given the opt
 
 
 ## Putting It All Together
+Here is a walkthrough video demonstrating the application, including perspectives from both a student and an instructor, highlighting its key features and overall purpose.
+[![Watch our demo]()](https://drive.google.com/file/d/1Y80GgYnAuw2M1uCTpafsPnMLDj5qolWM/view?usp=share_link)
