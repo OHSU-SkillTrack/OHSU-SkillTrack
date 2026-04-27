@@ -7,7 +7,7 @@ Team Roster
 Elizabeth Stahlke - stahlkee@oregonstate.edu  
 Antonio Rodriguez - rodriant@oregonstate.edu  
 Russell Hueso - huesor@oregonstate.edu  
-Aaron Pina-Ramirez - pinarama@oregonstate.edu  
+Aaron Pina - pinarama@oregonstate.edu  
 Benjamin Kono - konob@oregonstate.edu
 
 
@@ -20,6 +20,8 @@ We make the code fully available in this repository for you to run your own inst
 To run this application distict elements you must know about the **backend** and the **frontend**. You need the backend in order for the frontend to work. Follow the instructions to get your own instance of SkillTrack running!
 
 Before you continue these steps clone this reposity to your local development enviornment. We have had some issues with paths being too long in the past, so we recommend cloning the repo as close your root directyry as possible, So on windows clone it to C:\<CLONED-REPO>, or if you have additional drives on your computer you can clone them to the root of that drive instead too. ie. D:\<CLONED-REPO>
+
+If somebody else has already set up an instance of the Backend for you and you just want to locally test the frontend, you can skip to the Setting Up the Frontend section
 
 ## Setting Up the Backend
 
