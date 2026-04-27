@@ -52,7 +52,21 @@ you will now run two commands in this order:
 * _sam deploy_
   * You may instead run _sam deploy guided_ if you would like to customize certain aspects such as the name of the stack that will be deployed on AWS (it will default to SkillTrackBackend if you don't change this) or the AWS region it is deployed to. (it will default to us-east-2).
 
-⚠️ Potential issue: You must have python installed. If you don't you may have an error. It must also be version 3.13 (newer version may work, but we are certain that 3.13 does work). If you arleady have python installed and you are on windows, ensure that in your system Envionment variables python is in the path. You should see something like this: 
+⚠️ Potential issue: You must have python installed. If you don't you may have an error. It must also be version 3.13 (newer version may work, but we are certain that 3.13 does work). If you arleady have python installed and you are on windows, ensure that in your system Envionment variables python is in the path. You should see something like this:
+<img width="1893" height="1941" alt="image" src="https://github.com/user-attachments/assets/ce44cac6-0922-40be-807a-13dbff7f971b" />
+<img width="1107" height="1115" alt="image" src="https://github.com/user-attachments/assets/2ea8048c-c633-497a-bb47-078acba0c5c8" />
+<img width="1517" height="842" alt="image" src="https://github.com/user-attachments/assets/2bbd2566-3ab5-4a96-8f49-c5c5d2184685" />
+<img width="1267" height="1322" alt="image" src="https://github.com/user-attachments/assets/821bf02b-4a7d-4391-a141-9834920d258f" />
+Ensure these two red circled lines are there. If you do not one or both, you can manually add it by pressing the new button. You will have to find the python installation location on your computer to do this.
+
+
+
+
+
+
+
+
+
 
 **Optional Readings** (read this if you would like more in depth understanding of how the backend works. If you only want to setup the backend you can just skip this section.) 
 
