@@ -59,6 +59,13 @@ Administrators can upload a CSV file of student information to automatically cre
 ## Gallary
 Here are a few images of our app!
 
+<img width="220" alt="image showing SkillTrack Welcome Page" src="https://github.com/user-attachments/assets/8d2c5a06-4cfe-4107-81c6-18038dca1b4a" />
+<img width="220" alt="image showing the profile page of a student" src="https://github.com/user-attachments/assets/f624857f-2227-4eda-b61e-e438e3895625" />
+<img width="220" alt="image showing the skill list for a particular class on the student view" src="https://github.com/user-attachments/assets/95e49318-81b3-4d68-96d9-2715ead01a42" />
+<img width="220" alt="image showing camera view for a teacher checking a skill off" src="https://github.com/user-attachments/assets/157de8a9-705f-44a7-bbf1-533241649e23" />
+
+
+
 # How to Access or Try It
 We make the code fully available in this repository for you to run your own instance of the app and create your own derived work based on this app if you wish.
 
