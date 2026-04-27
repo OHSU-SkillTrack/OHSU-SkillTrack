@@ -56,6 +56,9 @@ Administrators can upload a CSV file of student information to automatically cre
 ## Video Demo
 [Watch our demo](https://drive.google.com/file/d/1Y80GgYnAuw2M1uCTpafsPnMLDj5qolWM/view?usp=share_link)
 
+## Gallary
+Here are a few images of our app!
+
 # How to Access or Try It
 We make the code fully available in this repository for you to run your own instance of the app and create your own derived work based on this app if you wish.
 
