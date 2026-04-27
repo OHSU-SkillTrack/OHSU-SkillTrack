@@ -155,6 +155,31 @@ Replace the https://example.com/api text with the URL you copied from the
 
 **Second File** <br>
 
+In the OHSU-SkillTrack\Frontend\SkillTrackFrontend\src location, create a new file called amplifyconfiguration.json and paste in the following below code. We will now work on populating the TODO sections.
+```
+{
+  "aws_project_region": "TODO",
+  "aws_cognito_region": "TODO",
+  "aws_user_pools_id": "TODO",
+  "aws_user_pools_web_client_id": "TODO",
+  "oauth": {
+    "domain": "TODO"
+  },
+  "aws_cognito_username_attributes": [
+    "EMAIL"
+  ],
+  "aws_cognito_social_providers": [],
+  "aws_cognito_signup_attributes": [],
+  "aws_cognito_mfa_configuration": "OFF",
+  "aws_cognito_mfa_types": [],
+  "aws_cognito_password_protection_settings": {
+    "passwordPolicyMinLength": 8,
+    "passwordPolicyCharacters": []
+  },
+  "aws_cognito_verification_mechanisms": []
+}
+```
+
 
 
 
