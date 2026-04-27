@@ -17,7 +17,7 @@ Benjamin Kono - konob@oregonstate.edu
 # How to Access or Try It
 We make the code fully available in this repository for you to run your own instance of the app and create your own derived work based on this app if you wish.
 
-To run this application distict elements you must know about the **backend** and the **frontend**. You need the backend in order for the frontend to work. Follow the instructions to get your own instance of SkillTrack running!
+To run this application distict elements you must know about the **backend** and the **frontend**. You need the backend in order for the frontend to work. Follow the instructions to get your own instance of SkillTrack running! We recommend you read through all the instructions before you begin the set up process yourself.
 
 Before you continue these steps clone this reposity to your local development enviornment. We have had some issues with paths being too long in the past, so we recommend cloning the repo as close your root directyry as possible, So on windows clone it to C:\<CLONED-REPO>, or if you have additional drives on your computer you can clone them to the root of that drive instead too. ie. D:\<CLONED-REPO>
 
@@ -47,7 +47,12 @@ You have all the prerequisites in place now, nice job! Now we can move on to dep
 ### Deploying the backend (The fun part)
 On your command line interface, navigate to the location where you have this repository located. Then further go in with the cd command until you are in the OHSU-SkillTrack/Backend/SkillTrackBackend folder. You should see something like this:
 <img width="1030" height="124" alt="image" src="https://github.com/user-attachments/assets/53374b72-c4ef-48b5-9e82-08647feb1a4a" />
+you will now run two commands in this order:
+* _sam build_
+* _sam deploy_
+  * You may instead run _sam deploy guided_ if you would like to customize certain aspects such as the name of the stack that will be deployed on AWS (it will default to SkillTrackBackend if you don't change this) or the AWS region it is deployed to. (it will default to us-east-2).
 
+⚠️ Potential issue: You must have python installed. If you don't you may have an error. It must also be version 3.13 (newer version may work, but we are certain that 3.13 does work). If you arleady have python installed and you are on windows, ensure that in your system Envionment variables python is in the path. You should see something like this: 
 
 **Optional Readings** (read this if you would like more in depth understanding of how the backend works. If you only want to setup the backend you can just skip this section.) 
 
