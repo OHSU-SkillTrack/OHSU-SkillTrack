@@ -46,7 +46,7 @@ const styles = StyleSheet.create({
 
     skillCard: {
         flexDirection: 'row',
-        alignItems: 'flex-start',
+        alignItems: 'center',
         marginBottom: 20,
         marginHorizontal: 5,
         paddingVertical: 10,
@@ -69,7 +69,7 @@ const styles = StyleSheet.create({
     iconContainer: {
         width: 32,
         alignItems: 'center',
-        justifyContent: 'flex-start'
+        justifyContent: 'center'
     },
 
 
