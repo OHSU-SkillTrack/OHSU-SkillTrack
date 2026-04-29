@@ -1,6 +1,7 @@
 import { Pressable, StyleSheet } from 'react-native';
 import { AppText } from "@/components/AppText";
 import { Ionicons } from '@expo/vector-icons';
+import { View } from "react-native";
 
 interface Skill {
   skillName: string;
@@ -18,16 +19,25 @@ export const SkillCard: React.FC<SkillCardProps> = ({ skill, onPress }: SkillCar
             style={styles.skillCard}
             onPress={() => onPress(skill)}>
             
-            <AppText style={styles.skillName}>
-                {skill.skillName}
-            </AppText>
+            <View style ={styles.textContainer}>
+                <AppText style={styles.skillName}>
+                    {skill.skillName}
+                </AppText>
+            </View>
 
-            {skill.status && 
-                <Ionicons
-                    name="checkmark-outline"
-                    size={28}
-                    color="#4972FF"
-                />}
+            <View style = {styles.iconContainer}>
+                {skill.status ? (
+                    <Ionicons name="checkmark-outline" size={28} color="#4972FF"/>
+
+                ) : (<Ionicons name="checkmark-outline" size={28} color="#4972FF"/>
+
+                )
+                }
+
+            </View>
+
+
+            
         </Pressable>
     )
 }
@@ -36,17 +46,31 @@ const styles = StyleSheet.create({
 
     skillCard: {
         flexDirection: 'row',
-        justifyContent: 'space-between',
+        alignItems: 'flex-start',
         marginBottom: 20,
         marginHorizontal: 5,
         paddingVertical: 10,
         paddingHorizontal: 15,
-        gap: 15,
         borderRadius: 25,
         backgroundColor: '#F5F5F5'
     },
 
+    textContainer:{
+        flex: 1,
+        paddingRight: 10
+
+    },
+
     skillName: {
-        fontSize: 20
-    }
+        fontSize: 20,
+        flexWrap: 'wrap'
+    },
+
+    iconContainer: {
+        width: 32,
+        alignItems: 'center',
+        justifyContent: 'flex-start'
+    },
+
+
 })
