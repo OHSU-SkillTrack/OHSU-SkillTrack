@@ -2,6 +2,6 @@ import { Redirect } from "expo-router";
 
 export default function StudentIndex() {
     return (
-        <Redirect href="/(student)/(tabs)/courses"/>
+        <Redirect href="/(student)/(tabs)/mainFlow/courses"/>
     )
 }

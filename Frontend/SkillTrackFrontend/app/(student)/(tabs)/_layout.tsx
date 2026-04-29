@@ -19,7 +19,7 @@ export default function TabsLayout() {
           right: 0,
           bottom: 0,
           height: 90,
-          backgroundColor: "transparent",
+          backgroundColor: "#FFFFFF",
           borderTopWidth: 0,
           elevation: 0,
         },
@@ -56,7 +56,7 @@ export default function TabsLayout() {
         }}
       />
       <Tabs.Screen
-        name="courses"
+        name="mainFlow/courses"
         options={{
           tabBarIcon: ({ color, size }) => (
             <Ionicons
@@ -69,7 +69,7 @@ export default function TabsLayout() {
       />
 
       <Tabs.Screen
-        name="resources"
+        name="resourceFlow/resources"
         options={{
           tabBarIcon: ({ color, size}) => (
             <Ionicons
@@ -85,9 +85,12 @@ export default function TabsLayout() {
       {/* hidden drill-down routes (NOT buttons) */}
       {/* <Tabs.Screen name="courses-by-year" options={{ href: null }} /> */}
       <Tabs.Screen name="index" options={{ href: null }} />
-      <Tabs.Screen name="course/[id]" options={{ href: null }} />
+      <Tabs.Screen name="mainFlow/courseDetails" options={{ href: null }} />
+      <Tabs.Screen name="mainFlow/skillDetails" options={{ href: null }} />
+      <Tabs.Screen name="resourceFlow/addResource" options={{ href: null }} />
+      <Tabs.Screen name="resourceFlow/resourceDetails" options={{ href: null }} />
       <Tabs.Screen name="skill/[id]" options={{ href: null }} />
-      
+
     </Tabs>
   );
 }
