@@ -29,7 +29,7 @@ export const SkillCard: React.FC<SkillCardProps> = ({ skill, onPress }: SkillCar
                 {skill.status ? (
                     <Ionicons name="checkmark-outline" size={28} color="#4972FF"/>
 
-                ) : (<Ionicons name="checkmark-outline" size={28} color="#4972FF"/>
+                ) : (<View style={{width: 28}}/>
 
                 )
                 }
