@@ -385,6 +385,29 @@ Resources:
           USER_POOL_ID: !Ref MyCognitoUserPool
 
 
+  AddDrugCardToUserFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: AddDrugCardToUser/
+      Handler: app.add_drug_card_to_user
+      Runtime: python3.13
+      Architectures:
+        - x86_64
+      Events:
+        AddDrugCardToUser:
+          Type: Api
+          Properties:
+            RestApiId: !Ref MyApi
+            Path: /AddDrugCardToUser
+            Method: post
+      Policies:
+        - DynamoDBCrudPolicy:
+            TableName: SkillTrackTable
+      Environment:
+        Variables:
+          TABLE_NAME: SkillTrackTable
+
+
   #----------------------------------------------------------------------ENDPOINT DEFINITION SECTION---------------------------------------------------------------------------------------#
 
 
