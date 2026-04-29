@@ -87,7 +87,10 @@ export default function TabsLayout() {
       <Tabs.Screen name="index" options={{ href: null }} />
       <Tabs.Screen name="mainFlow/courseDetails" options={{ href: null }} />
       <Tabs.Screen name="mainFlow/skillDetails" options={{ href: null }} />
-      
+      <Tabs.Screen name="resourceFlow/addResource" options={{ href: null }} />
+      <Tabs.Screen name="resourceFlow/resourceDetails" options={{ href: null }} />
+      <Tabs.Screen name="skill/[id]" options={{ href: null }} />
+
     </Tabs>
   );
 }
