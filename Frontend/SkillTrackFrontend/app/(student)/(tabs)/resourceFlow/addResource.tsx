@@ -1,12 +1,18 @@
 import { AddButton } from '@/components/ui/AddButton';
 import { useRouter } from 'expo-router';
 import React, { useState } from 'react';
+import generalStyles from '@/app/styles';
+import { AppText } from "@/components/AppText";
+import { fetchAuthSession } from 'aws-amplify/auth';
+import {Alert} from 'react-native'
+import { BASE_URL } from '@/src/constants/api';
 import {
     ScrollView,
     View,
     Text,
     TextInput,
     StyleSheet,
+    Pressable,
 } from 'react-native';
 
 type DrugCardFields = {
@@ -90,9 +96,51 @@ const fields: FieldConfig[] = [
     { key: 'evaluation', label: 'Evaluation (check after giving med)', multiline: true },
 ];
 
+
+
 export default function AddResource() {
     const [form, setForm] = useState<DrugCardFields>(initialFields);
     const router = useRouter();
+
+
+    async function handleAddDrugCard(){
+
+        try{
+            const session = await fetchAuthSession();
+            const token = session.tokens?.idToken?.toString();
+
+            if (!token) {
+                throw new Error('No authentication token found');
+            }
+
+            const res = await fetch(`${BASE_URL}/AddDrugCardToUser`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': token,
+                },
+                body: JSON.stringify({
+                    ...form,            //This notation automatically maps the form var onto the endpoint body! Note that as such the DrugCardFields MUST match the endpoint format. Please do not modify it unless you coordinate with backend endpoint changes
+                    CardID: Date.now(),
+                }),
+            });
+
+            if (!res.ok) {
+                const msg = await res.text();
+                throw new Error(msg);
+            }
+
+            Alert.alert('Success', 'Template created!');
+            router.back();
+
+        }
+        catch (err:any){
+            console.error('Error creating Drug Card:', err);
+            Alert.alert('Error', err.message || 'Failed to create drug card');
+
+        }
+        
+    }
 
     const handleChange = (key: keyof DrugCardFields, value: string) => {
         setForm(prev => ({ ...prev, [key]: value }));
@@ -115,6 +163,23 @@ export default function AddResource() {
                         />
                     </View>
                 ))}
+                
+                <Pressable style= {generalStyles.generalButton}>
+                    <AppText style ={generalStyles.generalButtonText} onPress={handleAddDrugCard}>
+                        Create/Update Drug Card 
+                    </AppText>
+                </Pressable>
+
+                <Pressable style= {generalStyles.generalButton}>
+                    <AppText style ={generalStyles.generalButtonText} onPress={() => router.push('/resourceFlow/resources')}>
+                        Cancel
+                    </AppText>
+                </Pressable>
+                
+                <View style = {styles.spacer}/>
+
+
+
             </ScrollView>
             <View style={styles.addButtonContainer}>
                 <AddButton onPress={() => router.push('/resourceFlow/resources')} />
@@ -158,5 +223,8 @@ const styles = StyleSheet.create({
         bottom: 150,
         paddingHorizontal: 24,
         paddingVertical: 16
+    },
+    spacer: {
+        height: 100,
     }
 });
