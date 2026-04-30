@@ -71,6 +71,48 @@ def add_drug_card_to_user(event, context):
     except:
         print("row already exist, continue execution")
 
+
+
+    #here we go ahead and cosnstruct the drug card based on what was provided
+    try:
+        newDrugCard = {
+            CardID : {
+                'genericName': '',
+                'tradeName': '',
+                'pronunciation': '',
+                'therapeuticClass': '',
+                'dose': '',
+                'routes': '',
+                'timeFrequency': '',
+                'normalDosageRange': '',
+                'onset': '',
+                'peak': '',
+                'duration': '',
+                'ivCompatibility': '',
+                'whyPatientGettingMed': '',
+                'nursingImplications': '',
+                'mechanismOfAction': '',
+                'commonSideEffects': '',
+                'interactions': '',
+                'labValueAlterations': '',
+                'patientTeaching': '',
+                'nursingAssessment': '',
+                'holdAssessment': '',
+                'evaluation': '',
+            }
+        }
+
+    except Exception as e:
+        statusCode = 500
+        output_body = "failed create drug card. Finished with this error: " + str(e)
+
+    return{
+        "statusCode": statusCode,
+        "headers": GlobalHeaders,
+        "body": json.dumps(output_body)
+    }
+
+
     
 
 
