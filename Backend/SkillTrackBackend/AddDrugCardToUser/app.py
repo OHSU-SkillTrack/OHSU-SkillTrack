@@ -158,7 +158,7 @@ def add_drug_card_to_user(event, context):
 
 
     statusCode = 200
-    output_body = output_body +  " " +  str(CardID)
+    output_body ="Success"
 
     return{
         "statusCode": statusCode,
