@@ -408,6 +408,29 @@ Resources:
           TABLE_NAME: SkillTrackTable
 
 
+  GetUsersDrugCardListFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: GetUsersDrugCardList/
+      Handler: app.get_users_drug_card_list
+      Runtime: python3.13
+      Architectures:
+        - x86_64
+      Events:
+        GetUsersDrugCardList:
+          Type: Api
+          Properties:
+            RestApiId: !Ref MyApi
+            Path: /GetUsersDrugCardList
+            Method: get
+      Policies:
+        - DynamoDBCrudPolicy:
+            TableName: SkillTrackTable
+      Environment:
+        Variables:
+          TABLE_NAME: SkillTrackTable
+
+
   #----------------------------------------------------------------------ENDPOINT DEFINITION SECTION---------------------------------------------------------------------------------------#
 
 
