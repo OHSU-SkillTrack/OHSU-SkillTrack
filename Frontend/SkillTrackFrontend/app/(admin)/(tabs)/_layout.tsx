@@ -26,6 +26,7 @@ export default function AdminTabs() {
                 name="templates"
                 options={{
                     title:"Templates",
+                    unmountOnBlur: false,
                     tabBarIcon: () => (
                         <Ionicons name="book-outline" size={30} color="#000000"/>
                     )
