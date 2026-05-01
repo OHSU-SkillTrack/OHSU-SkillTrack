@@ -4,24 +4,90 @@ import { SearchBar } from "@/components/ui/SearchBar";
 import { ResourceCard } from "@/components/resource/ResourceCard";
 import { useEffect, useMemo, useState } from "react";
 import { FlatList, StyleSheet, View } from "react-native";
-import { useRouter } from "expo-router";
+import {useLocalSearchParams, useRouter } from "expo-router";
 import { AddButton } from "@/components/ui/AddButton";
+import { BASE_URL } from '@/src/constants/api';
+import { fetchAuthSession } from 'aws-amplify/auth';
+import React from 'react';
 
 interface Resource {
     id: number
     name: string
+    data: Record<string, unknown>
 }
+
+
+//Drug card type definitions to make type safe
+type DrugCard = {
+    genericName: string
+    // add other fields you expect
+}
+type DrugCardsResponse = Record<string, DrugCard>
+//////////////////////////////////
+
+async function fetchDrugCards() : Promise<DrugCardsResponse>{
+    const session = await fetchAuthSession()
+    const token = session.tokens?.idToken?.toString()
+    console.log("called this!!!")
+    if (!token) {
+        throw new Error("No idToken found")
+    }
+
+    const response = await fetch(`${BASE_URL}/GetUsersDrugCardList`, {
+        method: "GET",
+        headers: {
+            "Content-Type": "application/json",
+            "Authorization": token
+        }
+    })
+    if (!response.ok) {
+        throw new Error("Failed to fetch user data")
+    }
+    return response.json()
+    
+}
+
 
 export default function Resources() {
     const [resources, setResources] = useState<Resource[]>([]);
     const [searchQuery, setSearchQuery] = useState('');
     const [loading, setLoading] = useState(true);
     const router = useRouter();
+    const [refreshing, setRefreshing] = React.useState(false);
+
+    async function loadCards(){
+
+        const drugCardList: Resource[] = []
+
+        const drugCards = await fetchDrugCards()
+
+        Object.entries(drugCards).forEach(([CardID, cardData])=> {
+            console.log(CardID)
+            console.log(cardData.genericName)
+            drugCardList.push({ id: parseInt(CardID), name: cardData.genericName, data: cardData}) 
+        }) 
+
+        setResources(drugCardList)
+        setLoading(false);
+    }
+
+
+    const onRefresh = async () => {
+        setRefreshing(true)
+
+        loadCards()
+
+        setRefreshing(false)
+    }
 
     useEffect(() => {
-        // fetch resources from API here
-        setResources([{ id: 1, name: "Epinephrine" }])
-        setLoading(false);
+
+        loadCards()
+        
+    
+        
+        
+    
     }, [])
 
     const filteredResources = useMemo(() => {
@@ -37,9 +103,10 @@ export default function Resources() {
 
     function handleResourcePress(resource: Resource) {
         router.push({
-            pathname: '/(student)/(tabs)/resourceFlow/resourceDetails',
+            pathname: '/(student)/(tabs)/resourceFlow/addResource',
             params: {
-                id: encodeURIComponent(resource.id)
+                id: encodeURIComponent(resource.id),
+                data: encodeURIComponent(JSON.stringify(resource.data))
             }
         });
     }
@@ -68,6 +135,8 @@ export default function Resources() {
                 renderItem={renderResource}
                 keyExtractor={(item) => `${item.id}`}
                 showsVerticalScrollIndicator={false}
+                refreshing={refreshing}
+                onRefresh={onRefresh}
             />
             <View style={styles.addButtonContainer}>
                 <AddButton onPress={handleAddPress} />

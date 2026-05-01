@@ -1,6 +1,6 @@
 import { AddButton } from '@/components/ui/AddButton';
-import { useRouter } from 'expo-router';
-import React, { useState } from 'react';
+import {useLocalSearchParams, useRouter } from 'expo-router';
+import React, { useEffect, useState } from 'react';
 import generalStyles from '@/app/styles';
 import { AppText } from "@/components/AppText";
 import { fetchAuthSession } from 'aws-amplify/auth';
@@ -101,7 +101,45 @@ const fields: FieldConfig[] = [
 export default function AddResource() {
     const [form, setForm] = useState<DrugCardFields>(initialFields);
     const router = useRouter();
+    
+    const {data} = useLocalSearchParams();
+    const {id} = useLocalSearchParams();
 
+    const[cardID, setCardID] = useState(0)
+
+
+    //
+
+    useEffect(() => {
+        async function loadExistingCardIfPresent(){
+            console.log('eee')
+
+            if(!data){
+                console.log("nope")
+                setForm(initialFields)
+
+
+            }else{
+                console.log("yup")
+                const parsedData = JSON.parse(decodeURIComponent(data as string))
+
+                console.log(parsedData)
+                console.log(id)
+                setForm(parsedData)
+                if (typeof id === "string") {
+                    setCardID(parseInt(id))
+                }
+            }
+
+            
+
+            //console.log(parsedData)
+
+   
+        }
+        loadExistingCardIfPresent()  
+
+    }, [data])
 
     async function handleAddDrugCard(){
 
@@ -113,16 +151,27 @@ export default function AddResource() {
                 throw new Error('No authentication token found');
             }
 
+
+
+            let body = 
+            JSON.stringify({
+            ...form,            //This notation automatically maps the form var onto the endpoint body! Note that as such the DrugCardFields MUST match the endpoint format. Please do not modify it unless you coordinate with backend endpoint changes
+            CardID: cardID ,})
+
+            if(cardID === 0){
+                let body = 
+                JSON.stringify({
+                ...form,            //This notation automatically maps the form var onto the endpoint body! Note that as such the DrugCardFields MUST match the endpoint format. Please do not modify it unless you coordinate with backend endpoint changes
+                })
+            }
+
             const res = await fetch(`${BASE_URL}/AddDrugCardToUser`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
                     'Authorization': token,
                 },
-                body: JSON.stringify({
-                    ...form,            //This notation automatically maps the form var onto the endpoint body! Note that as such the DrugCardFields MUST match the endpoint format. Please do not modify it unless you coordinate with backend endpoint changes
-                    CardID: Date.now(),
-                }),
+                body: body,
             });
 
             if (!res.ok) {
@@ -130,7 +179,7 @@ export default function AddResource() {
                 throw new Error(msg);
             }
 
-            Alert.alert('Success', 'Template created!');
+            Alert.alert('Success', 'Drug Card Made!');
             router.back();
 
         }
@@ -164,14 +213,14 @@ export default function AddResource() {
                     </View>
                 ))}
                 
-                <Pressable style= {generalStyles.generalButton}>
-                    <AppText style ={generalStyles.generalButtonText} onPress={handleAddDrugCard}>
-                        Create/Update Drug Card 
+                <Pressable style= {generalStyles.generalButton} onPress={async () =>{ await handleAddDrugCard() ;router.push('/resourceFlow/resources');  }} >
+                    <AppText style ={generalStyles.generalButtonText} >
+                        Create/Update Drug Card
                     </AppText>
                 </Pressable>
 
-                <Pressable style= {generalStyles.generalButton}>
-                    <AppText style ={generalStyles.generalButtonText} onPress={() => router.push('/resourceFlow/resources')}>
+                <Pressable style= {generalStyles.generalButton} onPress={() => router.push('/resourceFlow/resources')}>
+                    <AppText style ={generalStyles.generalButtonText} >
                         Cancel
                     </AppText>
                 </Pressable>

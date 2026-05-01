@@ -5,6 +5,7 @@ import { Ionicons } from '@expo/vector-icons';
 interface Resource {
     id: number
     name: string
+    data: Record<string, unknown>
 }
 
 interface ResourceCardProps {
