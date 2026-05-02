@@ -1,8 +1,9 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { View, ScrollView, Pressable, Alert, ActivityIndicator, FlatList, TouchableOpacity, TextInput} from 'react-native';
 import { fetchAuthSession } from 'aws-amplify/auth';
-import { useRouter } from 'expo-router';
+import { useRouter, useLocalSearchParams } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
+import { useFocusEffect } from '@react-navigation/native';
 
 import { BASE_URL } from '@/src/constants/api';
 import { AppText } from "@/components/AppText";
@@ -12,10 +13,39 @@ import styles from "@/app/styles";
 
 export default function AddCourseScreen() {
     const router = useRouter();
+    const params = useLocalSearchParams();
     const [courseName, setCourseName] = useState("");
     const [courseCode, setCourseCode] = useState("");
     const [courseDetails, setCourseDetails] = useState("");
+    const [skills, setSkills] = useState<Skill[]>([]);
     const [submitting, setSubmitting] = useState(false);
+
+    type Skill = {
+        Name: string;
+        Description: string;
+    };
+
+    useFocusEffect(
+        useCallback(() => {
+            if (params?.newSkill) {
+                try {
+                    const parsedSkill: Skill = JSON.parse(params.newSkill as string);
+    
+                    setSkills(prev => {
+                        const exists = prev.some(s => s.Name === parsedSkill.Name);
+                        if (exists) return prev;
+                        return [...prev, parsedSkill];
+                    });
+    
+                    router.setParams({ newSkill: undefined });
+    
+                } catch (e) {
+                    console.log("Failed to parse skill:", e);
+                }
+            }
+        }, [params?.newSkill])
+    );
+
 
     async function handleAddCourse() {
         if (!courseName || !courseCode ) {
@@ -43,6 +73,7 @@ export default function AddCourseScreen() {
                     ID: courseCode,
                     Name: courseName,
                     Course_Details: courseDetails,
+                    Skills: skills,
                 }),
             });
 
@@ -52,7 +83,7 @@ export default function AddCourseScreen() {
             }
 
             Alert.alert('Success', 'Template created!');
-            router.back();
+            router.replace('/(admin)/(tabs)/templates');
         } catch (err: any) {
             console.error('Error creating template course:', err);
             Alert.alert('Error', err.message || 'Failed to create template course');
@@ -120,7 +151,17 @@ export default function AddCourseScreen() {
                     multiline
                 />
                 <AppText style={{fontWeight:'bold'}}>Skills</AppText>
-                
+
+                {skills.map((skill, index) => (
+                <View key={index} style={{ marginTop: 8 }}>
+                    <AppText style={{ fontWeight: 'bold' }}>
+                        {skill.Name}
+                    </AppText>
+                    <AppText style={{ color: '#666' }}>
+                        {skill.Description}
+                    </AppText>
+                </View>
+            ))}
             
             </View>
             
@@ -131,7 +172,7 @@ export default function AddCourseScreen() {
                         width: 56,
                         height: 56,
                         borderRadius: 28,
-                        backgroundColor: '#4972FF',
+                        backgroundColor: '#000000',
                         alignItems: 'center',
                         justifyContent: 'center',
                         shadowColor: '#000',
@@ -147,6 +188,8 @@ export default function AddCourseScreen() {
                     <Ionicons name="add" size={32} color="#FFFFFF" />
                 </TouchableOpacity>
             </View>
+
+
 
             <View style={{ position: 'absolute', bottom: 30, left: 0, right: 0, paddingHorizontal: 20 }}>
                 <Pressable
