@@ -1,163 +1,141 @@
+import { useState, useEffect, useMemo } from 'react';
+import { View, ScrollView, Pressable, Alert, ActivityIndicator, FlatList , TouchableOpacity} from 'react-native';
 import { fetchAuthSession } from 'aws-amplify/auth';
-import { FlatList, View, TouchableOpacity } from "react-native";
-import { useEffect, useMemo, useState } from "react";
-import { useRouter } from 'expo-router';
-import { Ionicons } from '@expo/vector-icons';
-
-import { BASE_URL } from '@/src/constants/api';
-
-import { AppText } from "@/components/AppText";
+import { usePathname, useRouter } from 'expo-router';
 import { SearchBar } from "@/components/ui/SearchBar";
-import { CourseCard } from "@/components/course/CourseCard";
+import { BASE_URL } from '@/src/constants/api';
+import { AppText } from "@/components/AppText";
 import { Header } from "@/components/ui/Header";
-import { LoadingScreen } from "@/components/ui/LoadingScreen";
-
+import { Ionicons } from '@expo/vector-icons';
 import styles from "@/app/styles";
 
-interface Course {
-    courseId: string;
-    courseName: string;
-    studentCount: number;
+interface Template {
+    id: string;
+    name: string;
+    data: Record<string, unknown>
 }
 
-interface TeacherData {
-    Email: string;
-    FirstName?: string | null;
-    LastName?: string | null;
-    Roles?: string | null;
-    TeachingTheseCourses?: string[];
-}
-
-interface CourseData {
-    CourseName: string;
-    Students: string[];
-    Skills: Record<string, any>;
-}
-
-async function fetchInstructorCourses() {
-    const session = await fetchAuthSession();
-    const token = session.tokens?.idToken?.toString();
-    
-    if (!token) {
-        throw new Error("No idToken found");
-    }
-
-    // Get instructor's courses
-    const userResponse = await fetch(`${BASE_URL}/FetchUserData`, {
-        method: "GET",
-        headers: {
-            "Content-Type": "application/json",
-            "Authorization": token,
-        },
-    });
-
-    if (!userResponse.ok) {
-        throw new Error(`HTTP error! status: ${userResponse.status}`);
-    }
-
-    const userData: TeacherData = await userResponse.json();
-    const coursesTeaching = userData.TeachingTheseCourses || [];
-
-    // Fetch course details for each course
-    const coursePromises = coursesTeaching.map(async (courseId) => {
-        try {
-            const res = await fetch(`${BASE_URL}/GetCourseInformation?Course_ID=${encodeURIComponent(courseId)}`, {
-                method: "GET",
-                headers: {
-                    "Content-Type": "application/json",
-                    "Authorization": token,
-                },
-            });
-            
-            if (!res.ok) {
-                console.error(`Failed to fetch course ${courseId}`);
-                return null;
-            }
-
-            const courseData: CourseData = await res.json();
-            return {
-                courseId,
-                courseName: courseData.CourseName || courseId,
-                studentCount: courseData.Students?.length || 0,
-            };
-        } catch (err) {
-            console.error(`Error fetching course ${courseId}:`, err);
-            return null;
-        }
-    });
-
-    const coursesData = await Promise.all(coursePromises);
-    return coursesData.filter((c): c is Course => c !== null);
-}
-
-export default function InstructorCourses() {
+export default function AddCourseScreen() {
     const router = useRouter();
-    const [error, setError] = useState(false);
+    const [templates, setTemplates] = useState<Template[]>([]);
     const [loading, setLoading] = useState(true);
-    const [courses, setCourses] = useState<Course[]>([]);
+    const [submitting, setSubmitting] = useState(false);
     const [searchQuery, setSearchQuery] = useState('');
 
     useEffect(() => {
-        async function loadCourses() {
+        async function fetchTemplates() {
             try {
-                const fetchedCourses = await fetchInstructorCourses();
-                setCourses(fetchedCourses);
-            } catch (e) {
-                setError(true);
-                console.error("Failed to fetch instructor courses", e);
+                setLoading(true);
+                const session = await fetchAuthSession();
+                const token = session.tokens?.idToken?.toString();
+                
+                if (!token) {
+                    throw new Error('No authentication token found');
+                }
+
+                console.log("fetching template list, again...")
+                const res = await fetch(`${BASE_URL}/GetListOfTemplates`, {
+                    method: 'GET',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': token,
+                    },
+                });
+
+                if (!res.ok) {
+                    throw new Error('Failed to fetch templates');
+                }
+
+                const data = await res.json();
+                
+                // Parse template data
+                const parsed = Array.isArray(data)
+                    ? data.map((t: any) => ({
+                        id: t.ID?.split('#')[1] || t.ID || '',
+                        name: t.CourseName || t.ID || '',
+                        data: t.Skills
+                    }))
+                    : [];
+                
+                setTemplates(parsed);
+
+            } catch (err) {
+                console.error('Error fetching templates:', err);
+                Alert.alert('Error', 'Failed to load templates');
             } finally {
                 setLoading(false);
             }
         }
-        loadCourses();
+
+        fetchTemplates();
     }, []);
 
-    const filteredCourses = useMemo(() => {
+
+    const filteredTemplates = useMemo(() => {
         const q = searchQuery.trim().toLowerCase();
         if (!q) {
-            return courses;
+            return templates;
         }
-        return courses.filter((c) =>
-            c.courseId.toLowerCase().includes(q) ||
-            c.courseName.toLowerCase().includes(q)
+        return templates.filter((c) =>
+            c.id.toLowerCase().includes(q) ||
+            c.name.toLowerCase().includes(q)
         );
-    }, [courses, searchQuery]);
+    }, [templates, searchQuery]);
 
-    function handleCoursePress(course: Course) {
-        router.push({
-            pathname: '/(instructor)/(tabs)/courses/courseDetails' as any,
-            params: {
-                courseId: course.courseId,
-                courseName: course.courseName,
-            }
-        });
-    }
-
-    const renderCourse = ({ item }: { item: Course }) => {
-        return (
-            <CourseCard course={item} onPress={handleCoursePress} />
-        );
-    };
 
     if (loading) {
-        return <LoadingScreen />;
-    }
-
-    if (error) {
         return (
             <View style={styles.container}>
-                <Header text="My Courses" backArrow={false} />
-                <AppText>Error. Can't fetch data</AppText>
+                <Header 
+                    text="Templates" 
+                    backArrow={true} 
+                    onBackPress={() => router.back()}
+                />
+                <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+                    <ActivityIndicator size="large" color="#4972FF" />
+                    <AppText style={{ marginTop: 12, color: '#666' }}>Loading templates...</AppText>
+                </View>
             </View>
         );
     }
 
+    function handleTemplatePress(template: Template){
+        router.push({
+            pathname: '/(admin)/(tabs)/templates/templateDetails',
+            params: {
+                id: encodeURIComponent(template.id),
+                name: encodeURIComponent(template.name) ,
+                data: encodeURIComponent(JSON.stringify(template.data))
+            }
+        });
+
+    }
+
+    const renderTemplate = ({ item }: { item: Template }) => (
+        <Pressable
+            style={[
+                styles.courseCard
+            ]}
+            onPress={() => handleTemplatePress(item)}
+        >
+            <View style={styles.courseHeader}>
+                <AppText style={styles.cardNameText}>
+                    {item.id}
+                </AppText>
+                <AppText >
+                    {item.name}
+                </AppText>
+            </View>
+        </Pressable>
+    );
+
     return (
         <View style={styles.container}>
-            <Header text="My Courses" backArrow={false} />
+            <Header text="All OHSU Templates" backArrow={false} />
+            <AppText>Click on a template to view its contents or edit it. Note that any teacher can make a course from any templates you create here.</AppText>
             <SearchBar value={searchQuery} onChange={setSearchQuery} />
             
-            {filteredCourses.length === 0 ? (
+            {filteredTemplates.length === 0 ? (
                 <View style={styles.emptySearchContainer}>
                     <AppText style={styles.emptySearchText}>
                         {searchQuery ? "No courses found" : "No courses assigned"}
@@ -165,9 +143,9 @@ export default function InstructorCourses() {
                 </View>
             ) : (
                 <FlatList
-                    data={filteredCourses}
-                    renderItem={renderCourse}
-                    keyExtractor={(item) => item.courseId}
+                    data={filteredTemplates}
+                    renderItem={renderTemplate}
+                    keyExtractor={(item) => item.id}
                     contentContainerStyle={styles.listContent}
                     showsVerticalScrollIndicator={false}
                     ListFooterComponent={
@@ -175,8 +153,8 @@ export default function InstructorCourses() {
                     }
                 />
             )}
-            
-            {/* Add Course Button */}
+
+       {/* Add Course Button */}
             <View style={{ position: 'absolute', bottom: 30, alignSelf: 'center' }}>
                 <TouchableOpacity
                     style={{
@@ -199,6 +177,7 @@ export default function InstructorCourses() {
                     <Ionicons name="add" size={32} color="#FFFFFF" />
                 </TouchableOpacity>
             </View>
+            
         </View>
     );
 }

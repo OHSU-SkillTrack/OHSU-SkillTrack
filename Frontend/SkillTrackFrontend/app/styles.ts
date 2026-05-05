@@ -141,9 +141,20 @@ const generalStyles = StyleSheet.create({
     paddingHorizontal: 30,
     paddingVertical: 12,
     backgroundColor: '#ccc',
-    borderRadius: 10
+    borderRadius: 10,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  generalButtonText: {
+    color: '#000',
+    fontSize: 17,
+    fontWeight: 'bold',
   },
 
+
+  spacer: {
+        height: 100,
+    },
 
   // -------------------- general styles --------------------
 

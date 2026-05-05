@@ -1,5 +1,5 @@
 import { useState, useEffect, useMemo, useCallback } from 'react';
-import { View, Pressable, FlatList, TextInput, ScrollView } from 'react-native';
+import { View, Pressable, FlatList, TextInput, ScrollView , Text} from 'react-native';
 import { fetchAuthSession } from 'aws-amplify/auth';
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import { BASE_URL } from '@/src/constants/api';
@@ -244,7 +244,9 @@ export default function CourseDetails() {
                         keyExtractor={(item, index) => `${item.skillName}-${index}`}
                         contentContainerStyle={generalStyles.listContent}
                         showsVerticalScrollIndicator={false}
+                        ListFooterComponent={<View style={{ height: 100}}  />}
                     />)}
+            
             </View>
         </>
     );

@@ -20,6 +20,21 @@ export default function AddCourseScreen() {
     const [skills, setSkills] = useState<Skill[]>([]);
     const [submitting, setSubmitting] = useState(false);
 
+
+
+    //if params are passed in, this will be populated. This means that the user has selected to
+    //edit a existing template. So we will pre-fill this page with that content
+    const {data} = useLocalSearchParams();
+    const {id} = useLocalSearchParams();
+    const {name} = useLocalSearchParams();
+
+
+    interface TemplateOffering {
+    CourseName: string;
+    ID: string;
+    Skills: Record<string, unknown>;
+    }
+
     type Skill = {
         Name: string;
         Description: string;
@@ -27,7 +42,12 @@ export default function AddCourseScreen() {
 
     useFocusEffect(
         useCallback(() => {
+
+
+
+
             if (params?.newSkill) {
+                console.log("we have some skills in the running")
                 try {
                     const parsedSkill: Skill = JSON.parse(params.newSkill as string);
     
@@ -42,18 +62,66 @@ export default function AddCourseScreen() {
                 } catch (e) {
                     console.log("Failed to parse skill:", e);
                 }
+            }else if(id){
+                console.log("---------------------------")
+                console.log(id)
+                
+                console.log("We obtained an ID meaning we have course data: ")
+                const parsedData = JSON.parse(decodeURIComponent(data as string))
+                console.log(parsedData)
+                const existingSkills: Skill[] = Object.entries(parsedData).map(([name, value]: any) => ({
+                    Name: name,
+                    Description: value?.Description ?? ""
+                }));
+                setSkills(existingSkills)
+                setCourseName(Array.isArray(name) ? name[0] : name);
+                setCourseCode(Array.isArray(id) ? id[0] : id);   
+
+                router.setParams({
+                    id: undefined,
+                    data: undefined,
+                    name: undefined,
+                });
+
             }
         }, [params?.newSkill])
     );
 
 
+
+    function confirmOverwrite(): Promise<boolean> {
+    return new Promise((resolve) => {
+        Alert.alert(
+        'Confirm Action',
+        'This template ID already exists! Submitting this will overwrite that template with this template entry. Are you sure you want to overwrite the existing template and replace it with what you have entered here? If you would like to not overwrite an existing template you can simply change the course code in the second box and make a new template.',
+        [
+            {
+            text: 'Cancel',
+            style: 'cancel',
+            onPress: () => resolve(false),
+            },
+            {
+            text: 'OK',
+            onPress: () => resolve(true),
+            },
+        ],
+        { cancelable: true }
+        );
+    });
+    }
+
+
     async function handleAddCourse() {
+        
+        
+        
         if (!courseName || !courseCode ) {
             Alert.alert('Error', 'Please fill in all fields');
             return;
         }
 
         try {
+            
             setSubmitting(true);
 
             const session = await fetchAuthSession();
@@ -63,6 +131,40 @@ export default function AddCourseScreen() {
                 throw new Error('No authentication token found');
             }
 
+            /* 
+            When the user attempts to submit their template entry. They may enter a ID for a template that already exists.
+            This is OK. They can do this and overwrite what is currently in place with this new tempate OR template update if that's how they got to this screen.
+            
+            If it is an overwrite situation we will display this warning to ask the user if they want to move forward with the modification.
+            */
+            const current_template_offering_res = await fetch(`${BASE_URL}/GetListOfTemplates`, {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': token,
+                },
+            });
+
+            const current_template_offering: TemplateOffering[]  = await current_template_offering_res.json(); 
+
+            const appendedCode = "COURSE_TEMPLATE#" + courseCode 
+            
+            const exists = current_template_offering.some(
+                item => item.ID === appendedCode
+            );
+
+
+            if (exists) {
+                const userConfirmed = await confirmOverwrite()
+
+                if (!userConfirmed) return; // stop everything here
+            }
+
+
+
+
+
+            console.log("testing")
             const res = await fetch(`${BASE_URL}/CreateTemplate`, {
                 method: 'POST',
                 headers: {
@@ -94,77 +196,88 @@ export default function AddCourseScreen() {
 
     return (
         <View style={{ flex: 1 }}>
-            <View style={styles.container}>
-                <Header 
-                    text="New Course Template" 
-                    backArrow={true} 
-                    onBackPress={() => router.back()}
-                />
-
             
-                <TextInput
-                    style={{
-                        borderBottomWidth: 1,
-                        borderBottomColor: '#ccc',
-                        paddingVertical: 8,
-                        marginBottom: 16,
-                        textAlign:'center',
-                    }}
-                    placeholder='Course Name'
-                    value={courseName}
-                    onChangeText={setCourseName}
-                    placeholderTextColor="#999"
-                />
+            <ScrollView>
+                <View style={styles.container}>
+                    <Header 
+                        text="New Course Template" 
+                        backArrow={true} 
+                        onBackPress={() => router.back()}
+                    />
 
-                <TextInput
-                    style={{
-                        borderBottomWidth: 1,
-                        borderBottomColor: '#ccc',
-                        paddingVertical: 8,
-                        marginBottom: 16,
-                        textAlign:'center',
-                    }}
-                    placeholder='Course Code'
-                    value={courseCode}
-                    onChangeText={(text) => setCourseCode(text.toUpperCase())}
-                    placeholderTextColor="#999"
-                />
+                
+                    <TextInput
+                        style={{
+                            borderBottomWidth: 1,
+                            borderBottomColor: '#ccc',
+                            paddingVertical: 8,
+                            marginBottom: 16,
+                            textAlign:'center',
+                        }}
+                        placeholder='Course Name'
+                        value={courseName}
+                        onChangeText={setCourseName}
+                        placeholderTextColor="#999"
+                    />
 
-                <AppText style={{fontWeight:'bold'}}>Course Details</AppText>
-                <TextInput
-                    style={{
-                        height: 100,
-                        borderWidth: 1,             
-                        borderColor: '#ccc',        
-                        borderRadius: 12,           
-                        padding: 10,
-                        textAlignVertical: 'top',   
-                        backgroundColor: '#fff',    
-                        shadowColor: '#000',        
-                        shadowOffset: { width: 0, height: -3 }, 
-                        shadowOpacity: 0.2,
-                        shadowRadius: 4,
-                        elevation: 5,  
-                    }}
-                    value={courseDetails}
-                    onChangeText={setCourseDetails}
-                    multiline
-                />
-                <AppText style={{fontWeight:'bold'}}>Skills</AppText>
+                    <TextInput
+                        style={{
+                            borderBottomWidth: 1,
+                            borderBottomColor: '#ccc',
+                            paddingVertical: 8,
+                            marginBottom: 16,
+                            textAlign:'center',
+                        }}
+                        placeholder='Course Code'
+                        value={courseCode}
+                        onChangeText={(text) => setCourseCode(text.toUpperCase())}
+                        placeholderTextColor="#999"
+                    />
 
-                {skills.map((skill, index) => (
-                <View key={index} style={{ marginTop: 8 }}>
-                    <AppText style={{ fontWeight: 'bold' }}>
-                        {skill.Name}
-                    </AppText>
-                    <AppText style={{ color: '#666' }}>
-                        {skill.Description}
-                    </AppText>
+                    <AppText style={{fontWeight:'bold'}}>Course Details</AppText>
+                    <TextInput
+                        style={{
+                            height: 100,
+                            borderWidth: 1,             
+                            borderColor: '#ccc',        
+                            borderRadius: 12,           
+                            padding: 10,
+                            textAlignVertical: 'top',   
+                            backgroundColor: '#fff',    
+                            shadowColor: '#000',        
+                            shadowOffset: { width: 0, height: -3 }, 
+                            shadowOpacity: 0.2,
+                            shadowRadius: 4,
+                            elevation: 5,  
+                        }}
+                        value={courseDetails}
+                        onChangeText={setCourseDetails}
+                        multiline
+                    />
+                    <AppText style={{fontWeight:'bold'}}>Skills</AppText>
+
+                    {skills.map((skill, index) => (
+                    <View key={index} style={{ marginTop: 8 }}>
+                        <AppText style={{ fontWeight: 'bold' }}>
+                            {skill.Name}
+                        </AppText>
+                        <AppText style={{ color: '#666' }}>
+                            {skill.Description}
+                        </AppText>
+                    </View>
+                ))}
+                
                 </View>
-            ))}
-            
-            </View>
-            
+                
+
+
+                <View style = {styles.spacer}/>
+
+
+            </ScrollView>
+    
+
+
             {/* Add Course Button */}
             <View style={{ position: 'absolute', bottom: 100, alignSelf: 'center' }}>
                 <TouchableOpacity
@@ -201,7 +314,7 @@ export default function AddCourseScreen() {
                     disabled={!courseName || !courseCode || submitting}
                 >
                     <AppText style={styles.templateButtonText}>
-                        {submitting ? 'Creating Template...' : 'Create Template'}
+                        {submitting ? 'Creating Template...' : 'Create/Update Template'}
                     </AppText>
                 </Pressable>
             </View>

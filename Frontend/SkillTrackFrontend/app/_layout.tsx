@@ -28,6 +28,7 @@ export default function RootLayout() {
 				<Stack screenOptions={{ headerShown: false, contentStyle: { backgroundColor: '#FFFFFF' } }}>
 					<Stack.Screen name="(student)" />
 					<Stack.Screen name="(instructor)" />
+					<Stack.Screen name="(admin)" />
 				</Stack>
 			</SkillTrackAuth>
 		</Authenticator.Provider>

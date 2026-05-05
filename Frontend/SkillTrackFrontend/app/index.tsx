@@ -34,6 +34,7 @@ export default function Index() {
     useEffect(() => {
         async function loadUser() {
             try {
+                console.log("inner call?")
                 const user = await fetchUser()
                 setRole(user.Roles[0])
             }
@@ -60,6 +61,7 @@ export default function Index() {
         )
     }
 
+    console.log("Outer call?")
     if (role === "Student") {
         return <Redirect href="/(student)/(tabs)" />
     }
@@ -69,6 +71,7 @@ export default function Index() {
     if (role === "Admin") {
         return <Redirect href="/(admin)/(tabs)" />
     }
+
     
     return null
 }
