@@ -49,7 +49,7 @@ export default function AddCourseScreen() {
                 const parsed = Array.isArray(data)
                     ? data.map((t: any) => ({
                         id: t.ID?.split('#')[1] || t.ID || '',
-                        name: t.Name || t.ID || '',
+                        name: t.CourseName || t.ID || '',
                     }))
                     : [];
                 
@@ -144,15 +144,15 @@ export default function AddCourseScreen() {
     );
 
     return (
-        <View style={{ flex: 1 }}>
-            <View style={styles.container}>
+        <View style={styles.container}>
+            <View >
                 <Header 
                     text="Add Course" 
                     backArrow={true} 
                     onBackPress={() => router.back()}
                 />
 
-                <AppText style={{ fontSize: 16, fontWeight: '600', marginBottom: 12 }}>
+                <AppText style={{ fontSize: 16, fontWeight: '600', marginBottom: 12, justifyContent:'center', textAlign:'center' }}>
                     Select a Course Template
                 </AppText>
             </View>
@@ -168,7 +168,7 @@ export default function AddCourseScreen() {
                     data={templates}
                     renderItem={renderTemplate}
                     keyExtractor={(item) => item.id}
-                    contentContainerStyle={{ paddingHorizontal: 20, paddingBottom: 120 }}
+                    contentContainerStyle={{ paddingBottom: 120 }}
                     scrollEnabled
                 />
             )}
