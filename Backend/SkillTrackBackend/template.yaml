@@ -331,30 +331,6 @@ Resources:
         Variables:
           TABLE_NAME: SkillTrackTable
   
-
-  EditTemplateFunction:
-    Type: AWS::Serverless::Function
-    Properties:
-      CodeUri: EditTemplate/
-      Handler: app.edit_template
-      Runtime: python3.13
-      Architectures:
-        - x86_64
-      Events:
-        EditTemplate:
-          Type: Api
-          Properties:
-            RestApiId: !Ref MyApi
-            Path: /EditTemplate
-            Method: post
-      Policies:
-        - DynamoDBCrudPolicy:
-            TableName: SkillTrackTable
-      Environment:
-        Variables:
-          TABLE_NAME: SkillTrackTable
-
-
   CreateUserFunction:
     Type: AWS::Serverless::Function
     Properties:
