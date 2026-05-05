@@ -43,22 +43,6 @@ export default function AddCourseScreen() {
     useFocusEffect(
         useCallback(() => {
 
-            if(id){
-                console.log("---------------------------")
-                
-                console.log("We obtained an ID meaning we have course data: ")
-                const parsedData = JSON.parse(decodeURIComponent(data as string))
-                console.log(parsedData)
-                const existingSkills: Skill[] = Object.entries(parsedData).map(([name, value]: any) => ({
-                    Name: name,
-                    Description: value?.Description ?? ""
-                }));
-                setSkills(existingSkills)
-                setCourseName(Array.isArray(name) ? name[0] : name);
-                setCourseCode(Array.isArray(id) ? id[0] : id);
-                
-            }
-
 
 
 
@@ -78,6 +62,27 @@ export default function AddCourseScreen() {
                 } catch (e) {
                     console.log("Failed to parse skill:", e);
                 }
+            }else if(id){
+                console.log("---------------------------")
+                console.log(id)
+                
+                console.log("We obtained an ID meaning we have course data: ")
+                const parsedData = JSON.parse(decodeURIComponent(data as string))
+                console.log(parsedData)
+                const existingSkills: Skill[] = Object.entries(parsedData).map(([name, value]: any) => ({
+                    Name: name,
+                    Description: value?.Description ?? ""
+                }));
+                setSkills(existingSkills)
+                setCourseName(Array.isArray(name) ? name[0] : name);
+                setCourseCode(Array.isArray(id) ? id[0] : id);   
+
+                router.setParams({
+                    id: undefined,
+                    data: undefined,
+                    name: undefined,
+                });
+
             }
         }, [params?.newSkill])
     );
