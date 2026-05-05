@@ -151,6 +151,11 @@ const generalStyles = StyleSheet.create({
     fontWeight: 'bold',
   },
 
+
+  spacer: {
+        height: 100,
+    },
+
   // -------------------- general styles --------------------
 
   //-------------------- courses page -------------------- 
