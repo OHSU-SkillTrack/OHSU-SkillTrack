@@ -1,5 +1,5 @@
 import { useState, useEffect, useCallback } from 'react';
-import { View, ScrollView, Pressable, Alert, ActivityIndicator, FlatList, TouchableOpacity, TextInput} from 'react-native';
+import { View, ScrollView, Pressable, Alert, ActivityIndicator, FlatList, TouchableOpacity, TextInput, StyleSheet} from 'react-native';
 import { fetchAuthSession } from 'aws-amplify/auth';
 import { useRouter, useLocalSearchParams } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
@@ -25,7 +25,7 @@ export default function AddCourseScreen() {
     //if params are passed in, this will be populated. This means that the user has selected to
     //edit a existing template. So we will pre-fill this page with that content
     const {data} = useLocalSearchParams();
-    const {id} = useLocalSearchParams();
+    let {id} = useLocalSearchParams();
     const {name} = useLocalSearchParams();
 
 
@@ -57,7 +57,10 @@ export default function AddCourseScreen() {
                         return [...prev, parsedSkill];
                     });
     
-                    router.setParams({ newSkill: undefined });
+                    router.setParams({ newSkill: undefined,                     
+                    id: undefined,
+                    data: undefined,
+                    name: undefined,});
     
                 } catch (e) {
                     console.log("Failed to parse skill:", e);
@@ -77,6 +80,7 @@ export default function AddCourseScreen() {
                 setCourseName(Array.isArray(name) ? name[0] : name);
                 setCourseCode(Array.isArray(id) ? id[0] : id);   
 
+                id =""
                 router.setParams({
                     id: undefined,
                     data: undefined,
@@ -108,6 +112,28 @@ export default function AddCourseScreen() {
         { cancelable: true }
         );
     });
+    }
+
+    async function handleRemoveSkill(skillName: String){
+
+
+        Alert.alert(
+            'Confirm Action',
+            `Are you sure you want to delete this skill '${skillName}'` ,
+            [
+            {
+                text: 'Cancel',
+                style: 'cancel', // iOS only, but safe to include
+            },
+            {
+                text: 'Yes',
+                onPress: () => setSkills(prevSkills => prevSkills.filter(skill => skill.Name !== skillName)),
+            },
+            ],
+            { cancelable: true } // Android: tapping outside closes the alert
+        );
+
+
     }
 
 
@@ -257,14 +283,25 @@ export default function AddCourseScreen() {
                     <AppText style={{fontWeight:'bold'}}>Skills</AppText>
 
                     {skills.map((skill, index) => (
-                    <View key={index} style={{ marginTop: 8 }}>
-                        <AppText style={{ fontWeight: 'bold' }}>
-                            {skill.Name}
-                        </AppText>
-                        <AppText style={{ color: '#666' }}>
-                            {skill.Description}
-                        </AppText>
+
+                    <View style={[ localStyles.skillCard]} key ={index}>
+                        
+                        <View style={localStyles.textContainer}>
+                            <AppText style={localStyles.skillName}>
+                                {skill.Name}
+                            </AppText>
+                            <AppText style={localStyles.skillDesc} >
+                                {skill.Description}
+                            </AppText>
+                        </View>
+                        <Pressable style={localStyles.iconContainer}
+                            onPress={() => handleRemoveSkill(skill.Name)} 
+                        >
+                            <Ionicons name="remove-circle-outline" size={28} color="red"  />
+                        </Pressable>
                     </View>
+
+
                 ))}
                 
                 </View>
@@ -321,3 +358,43 @@ export default function AddCourseScreen() {
         </View>
     );
 }
+
+
+
+const localStyles = StyleSheet.create({
+
+    skillCard: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        marginBottom: 20,
+        marginHorizontal: 5,
+        paddingVertical: 10,
+        paddingHorizontal: 15,
+        borderRadius: 25,
+        backgroundColor: '#F5F5F5'
+    },
+
+    textContainer:{
+        flex: 1,
+        paddingRight: 10
+
+    },
+
+    skillName: {
+        fontSize: 20,
+        flexWrap: 'wrap'
+    },
+    
+    skillDesc: {
+        fontSize: 15,
+        flexWrap: 'wrap'
+    },
+
+    iconContainer: {
+        width: 32,
+        alignItems: 'center',
+        justifyContent: 'center'
+    },
+
+
+})
