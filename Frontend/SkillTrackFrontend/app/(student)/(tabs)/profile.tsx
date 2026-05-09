@@ -6,6 +6,7 @@ import generalStyles from "@/app/styles";
 import { useState, useEffect, useCallback } from 'react';
 import { BASE_URL } from '@/src/constants/api';
 import QRCode from "react-native-qrcode-svg";
+import { Header } from '@/components/ui/Header';
 
 interface SkillCheckInfo {
   CheckedOff: boolean;
@@ -161,13 +162,9 @@ export default function ProfileTab() {
   return (
     <ScrollView style={generalStyles.container}>
       {/* Header */}
-      <View style={generalStyles.headerContainer}>
-        <View />
-        <AppText style={generalStyles.headerTitle}>
-          Profile
-        </AppText>
-        <View style={{ width: 40 }} />
-      </View>
+
+      <Header text="Profile" backArrow={false} />
+      
 
       {/* Profile Card */}
       <View style={generalStyles.profileCard}>

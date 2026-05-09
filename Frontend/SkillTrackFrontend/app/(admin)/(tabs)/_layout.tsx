@@ -1,9 +1,14 @@
 import { Ionicons } from "@expo/vector-icons";
 import { Tabs } from "expo-router";
+import { NavBarOptions } from "@/constants/NavBarOptions";
 
 export default function AdminTabs() {
     return (
-        <Tabs screenOptions={{ headerShown: false }}>
+        <Tabs
+            initialRouteName="index"
+            screenOptions={NavBarOptions}
+        >
+            
             {/* Hide index tab */}
             <Tabs.Screen
                 name="index"
@@ -16,8 +21,8 @@ export default function AdminTabs() {
                 name="profile"
                 options={{
                     title: "Profile",
-                    tabBarIcon: () => (
-                        <Ionicons name="person-outline" size={30} color="#000000"/>
+                    tabBarIcon: ({ color, size }) => (
+                        <Ionicons name="person-outline" size={size ?? 26} color={color}/>
                     )
                 }}
             />
@@ -27,25 +32,22 @@ export default function AdminTabs() {
                 options={{
                     title:"Templates",
                     unmountOnBlur: false,
-                    tabBarIcon: () => (
-                        <Ionicons name="book-outline" size={30} color="#000000"/>
+                    tabBarIcon: ({ color, size }) => (
+                        <Ionicons name="book-outline" size={size ?? 26} color={color}/>
                     )
                 }}
             />
-
-
 
             <Tabs.Screen
                 name="addUsers"
                 options={{
                     title:"Add Users",
-                    tabBarIcon: () => (
-                        <Ionicons name="person-add-outline" size={30} color="#000000"/>
+                    tabBarIcon: ({ color, size }) => (
+                        <Ionicons name="person-add-outline" size={size ?? 26} color={color}/>
                     )
                 }}
             />
 
-            
         </Tabs>
     )
 }

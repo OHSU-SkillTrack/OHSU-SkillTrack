@@ -115,7 +115,7 @@ export default function ProfileTab() {
 
   return (
     <ScrollView style={styles.container} showsVerticalScrollIndicator={false}>
-      <Header text="ProfileStuff" backArrow={false} />
+      <Header text="Profile" backArrow={false} />
 
       {/* Profile Card */}
       <View
