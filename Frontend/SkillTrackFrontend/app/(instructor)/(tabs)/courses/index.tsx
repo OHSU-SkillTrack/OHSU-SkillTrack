@@ -12,6 +12,8 @@ import { CourseCard } from "@/components/course/CourseCard";
 import { Header } from "@/components/ui/Header";
 import { LoadingScreen } from "@/components/ui/LoadingScreen";
 
+import React from 'react';
+
 import styles from "@/app/styles";
 
 interface Course {
@@ -96,21 +98,32 @@ export default function InstructorCourses() {
     const [loading, setLoading] = useState(true);
     const [courses, setCourses] = useState<Course[]>([]);
     const [searchQuery, setSearchQuery] = useState('');
+    const [refreshing, setRefreshing] = React.useState(false);
 
     useEffect(() => {
-        async function loadCourses() {
-            try {
-                const fetchedCourses = await fetchInstructorCourses();
-                setCourses(fetchedCourses);
-            } catch (e) {
-                setError(true);
-                console.error("Failed to fetch instructor courses", e);
-            } finally {
-                setLoading(false);
-            }
-        }
+
         loadCourses();
+        
     }, []);
+
+
+    const onRefresh = async () =>{
+        setRefreshing(true)
+        await loadCourses()
+        setRefreshing(false)
+    }
+
+    async function loadCourses() {
+        try {
+            const fetchedCourses = await fetchInstructorCourses();
+            setCourses(fetchedCourses);
+        } catch (e) {
+            setError(true);
+            console.error("Failed to fetch instructor courses", e);
+        } finally {
+            setLoading(false);
+        }
+    }
 
     const filteredCourses = useMemo(() => {
         const q = searchQuery.trim().toLowerCase();
@@ -170,6 +183,8 @@ export default function InstructorCourses() {
                     keyExtractor={(item) => item.courseId}
                     contentContainerStyle={styles.listContent}
                     showsVerticalScrollIndicator={false}
+                    refreshing={refreshing}
+                    onRefresh={onRefresh} 
                     ListFooterComponent={
                         <View style={{ height: 100 }} />
                     }
