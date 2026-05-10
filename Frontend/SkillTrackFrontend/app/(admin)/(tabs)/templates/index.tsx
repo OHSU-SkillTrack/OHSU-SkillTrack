@@ -8,6 +8,7 @@ import { AppText } from "@/components/AppText";
 import { Header } from "@/components/ui/Header";
 import { Ionicons } from '@expo/vector-icons';
 import styles from "@/app/styles";
+import React from 'react';
 
 interface Template {
     id: string;
@@ -22,53 +23,66 @@ export default function AddCourseScreen() {
     const [submitting, setSubmitting] = useState(false);
     const [searchQuery, setSearchQuery] = useState('');
 
-    useEffect(() => {
-        async function fetchTemplates() {
-            try {
-                setLoading(true);
-                const session = await fetchAuthSession();
-                const token = session.tokens?.idToken?.toString();
-                
-                if (!token) {
-                    throw new Error('No authentication token found');
-                }
+    //for scroll down refresh
+    const [refreshing, setRefreshing] = React.useState(false);
 
-                console.log("fetching template list, again...")
-                const res = await fetch(`${BASE_URL}/GetListOfTemplates`, {
-                    method: 'GET',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'Authorization': token,
-                    },
-                });
 
-                if (!res.ok) {
-                    throw new Error('Failed to fetch templates');
-                }
-
-                const data = await res.json();
-                
-                // Parse template data
-                const parsed = Array.isArray(data)
-                    ? data.map((t: any) => ({
-                        id: t.ID?.split('#')[1] || t.ID || '',
-                        name: t.CourseName || t.ID || '',
-                        data: t.Skills
-                    }))
-                    : [];
-                
-                setTemplates(parsed);
-
-            } catch (err) {
-                console.error('Error fetching templates:', err);
-                Alert.alert('Error', 'Failed to load templates');
-            } finally {
-                setLoading(false);
+    async function fetchTemplates() {
+        try {
+            setLoading(true);
+            const session = await fetchAuthSession();
+            const token = session.tokens?.idToken?.toString();
+            
+            if (!token) {
+                throw new Error('No authentication token found');
             }
+
+            console.log("fetching template list, again...")
+            const res = await fetch(`${BASE_URL}/GetListOfTemplates`, {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': token,
+                },
+            });
+
+            if (!res.ok) {
+                throw new Error('Failed to fetch templates');
+            }
+
+            const data = await res.json();
+            
+            // Parse template data
+            const parsed = Array.isArray(data)
+                ? data.map((t: any) => ({
+                    id: t.ID?.split('#')[1] || t.ID || '',
+                    name: t.CourseName || t.ID || '',
+                    data: t.Skills
+                }))
+                : [];
+            
+            setTemplates(parsed);
+
+        } catch (err) {
+            console.error('Error fetching templates:', err);
+            Alert.alert('Error', 'Failed to load templates');
+        } finally {
+            setLoading(false);
         }
+    }
+
+    useEffect(() => {
 
         fetchTemplates();
+        
     }, []);
+
+    const onRefresh = async() =>{
+
+        setRefreshing(true)
+        await fetchTemplates()
+        setRefreshing(false)
+    }
 
 
     const filteredTemplates = useMemo(() => {
@@ -148,6 +162,8 @@ export default function AddCourseScreen() {
                     keyExtractor={(item) => item.id}
                     contentContainerStyle={styles.listContent}
                     showsVerticalScrollIndicator={false}
+                    refreshing={refreshing}
+                    onRefresh={onRefresh}
                     ListFooterComponent={
                         <View style={{ height: 100 }} />
                     }
