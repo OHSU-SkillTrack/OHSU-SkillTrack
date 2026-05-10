@@ -44,8 +44,8 @@ export default function StudentDetailsScreen() {
     const params = useLocalSearchParams();
 
     const studentEmail = params.email as string;
-    const firstName = params.firstName as string;
-    const lastName = params.lastName as string;
+    const [firstName, setFirstName] = useState<string>(params.firstName as string);
+    const [lastName, setLastName] = useState<string>(params.lastName as string);
     const courseId = params.courseId as string;
     const courseName = (params.courseName as string) || courseId;
 
@@ -86,6 +86,12 @@ export default function StudentDetailsScreen() {
                 // StudentsExtended is an object keyed by email
                 const studentData = data.StudentsExtended?.[studentEmail];
                 
+
+                //set actual name and last name now that we have it
+                setFirstName(studentData?.FirstName as string)
+                setLastName(studentData?.LastName as string)
+
+
                 // Skills are nested under Courses[courseId].Skills
                 const studentSkills = studentData?.Courses?.[courseId]?.Skills;
                 
