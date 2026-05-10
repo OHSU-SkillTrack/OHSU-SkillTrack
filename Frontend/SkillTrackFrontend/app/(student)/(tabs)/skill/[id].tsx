@@ -16,7 +16,9 @@ interface SkillDetailData {
     name: string;
     url: string;
   }>;
-  completionDetails: string;
+  checkedOff: boolean;
+  checkedOffBy?: string;
+  dateCheckedOff?: string;
 }
 
 interface CourseInfoResponse{
@@ -26,8 +28,23 @@ interface CourseInfoResponse{
     Description?: string;
     Requirements?: string[];
     Resources?: Array<{ name: string; url?: string }>;
-    CompletionDetails?: string;  // this could be needed for the "need to get checked off"/"checked off by _ on _" at the bottom?
   }>;
+}
+
+interface UserDataResponse {
+  Courses?: Record<
+    string,
+    {
+      Skills?: Record<
+        string,
+        {
+          CheckedOff?: boolean;
+          CheckedOffBy?: string;
+          DateCheckedOff?: string;
+        }
+      >;
+    }
+  >;
 }
 
 export default function SkillDetailScreen() {
@@ -58,8 +75,6 @@ export default function SkillDetailScreen() {
     }
   }
 
-
-  // Optional: Verify skill status with API (but /hello doesn't have individual skill status)
 
     useEffect( () => { 
       const fetchSkillDetails = async () => {
@@ -101,6 +116,21 @@ export default function SkillDetailScreen() {
         const courseInfo: CourseInfoResponse = await response.json();
         console.log('course info: ', courseInfo);
 
+        const userResponse = await fetch(`${BASE_URL}/FetchUserData`, {
+          method: 'GET',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': token,
+          },
+        });
+
+        if (!userResponse.ok) {
+          throw new Error(`User data request failed: ${userResponse.status}`);
+        }
+
+        const userData: UserDataResponse = await userResponse.json();
+        const studentSkill = userData.Courses?.[courseId]?.Skills?.[skillName];
+
         const skillTemplate = courseInfo?.Skills?.[skillName];
 
         if (!skillTemplate) {
@@ -118,10 +148,9 @@ export default function SkillDetailScreen() {
             name: r.name ?? 'Resource',
             url: r.url ?? '#',
           })),
-          completionDetails: skillTemplate.CompletionDetails ?? (
-            isComplete ? 'Marked as complete by instructor.' // probably change based on what message we want
-            : 'This skill has not been marked as complete by an instructor.'
-          ),
+          checkedOff: Boolean(studentSkill?.CheckedOff),
+          checkedOffBy: studentSkill?.CheckedOffBy,
+          dateCheckedOff: studentSkill?.DateCheckedOff,
         }),
 
         setLoading(false);
@@ -179,16 +208,16 @@ export default function SkillDetailScreen() {
   return (
     <>
       <View style={generalStyles.container}>
-        <View style={generalStyles.headerContainer}>
+        <View style={[generalStyles.headerContainer, { marginHorizontal: -10, paddingHorizontal: 10 }]}>
+          <Ionicons name="checkmark-circle-outline" size={40} color="#2F6BFF" />
+          <AppText style={generalStyles.courseHeaderTitle}>{skillName}</AppText>
           <Pressable
-          onPress={() => handleBack()}
-              hitSlop={10} // this lets users tap slightly outside the icon
-              accessibilityLabel="Back"
-              >
-              <Ionicons name="arrow-back-outline" size={40} color="#000000" />
-              </Pressable>
-              <AppText style={generalStyles.courseHeaderTitle}>{skillName}</AppText>
-              <Ionicons name="checkmark-circle-outline" size={40} color="#2F6BFF" />
+            onPress={() => handleBack()}
+            hitSlop={10}
+            accessibilityLabel="Back"
+          >
+            <Ionicons name="arrow-back-outline" size={40} color="#000000" />
+          </Pressable>
         </View>
 
       <ScrollView style={generalStyles.container} showsVerticalScrollIndicator={false}>
@@ -245,9 +274,30 @@ export default function SkillDetailScreen() {
         {/* Completion Details */}
         <View style={styles.section}>
           <AppText style={styles.sectionTitle}>Completion Details</AppText>
-          <AppText style={styles.completionText}>
-            {skillData?.completionDetails}
-          </AppText>
+          {skillData?.checkedOff ? (
+            <View style={styles.completionCard}>
+              <AppText style={styles.completionLabel}>Status</AppText>
+              <AppText style={styles.completionText}>Completed</AppText>
+              {skillData.checkedOffBy ? (
+                <AppText style={styles.completionMeta}>
+                  Checked off by {skillData.checkedOffBy}
+                </AppText>
+              ) : null}
+              {skillData.dateCheckedOff ? (
+                <AppText style={styles.completionMeta}>
+                  Date: {skillData.dateCheckedOff}
+                </AppText>
+              ) : null}
+            </View>
+          ) : (
+            <View style={styles.completionCard}>
+              <AppText style={styles.completionLabel}>Status</AppText>
+              <AppText style={styles.completionText}>Not yet completed</AppText>
+              <AppText style={styles.completionMeta}>
+                This skill has not been checked off yet.
+              </AppText>
+            </View>
+          )}
         </View>
 
         {/* Action Button */}
@@ -343,10 +393,26 @@ const styles = StyleSheet.create({
     fontWeight: '300',
   },
   completionText: {
-    fontSize: 20,
+    fontSize: 18,
     color: '#000000',
-    flexDirection: "row",
-    alignItems: "center"
+    fontWeight: '600',
+    marginTop: 2,
+  },
+  completionCard: {
+    padding: 16,
+    backgroundColor: '#F2F2F7',
+    borderRadius: 16,
+  },
+  completionLabel: {
+    fontSize: 14,
+    color: '#666666',
+    fontWeight: '600',
+    marginBottom: 4,
+  },
+  completionMeta: {
+    fontSize: 14,
+    color: '#666666',
+    marginTop: 6,
   },
   actionButton: {
     borderRadius: 30,
