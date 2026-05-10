@@ -155,7 +155,7 @@ export default function AddCourseScreen() {
             )}
 
        {/* Add Course Button */}
-            <View style={{ position: 'absolute', bottom: 30, alignSelf: 'center' }}>
+            <View style={{ position: 'absolute', bottom: 110, alignSelf: 'center' }}>
                 <TouchableOpacity
                     style={{
                         width: 56,
