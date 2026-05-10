@@ -12,6 +12,7 @@ import { Image, Dimensions, ScrollView} from 'react-native';
 import { useState } from "react";
 import { fetchAuthSession } from 'aws-amplify/auth';
 import { BASE_URL } from '@/src/constants/api';
+import generalStyles from "@/app/styles";
 
 
 type UserRole = "Student" | "Teacher" | "Admin";
@@ -468,16 +469,7 @@ export default function AddStudentsTab() {
         </Pressable>
         
 
-
-        
-        
-        
-        
-        
-        
-        <Text>    </Text>
-
-
+        <View style ={generalStyles.spacer}/>
 
 
       </View>
