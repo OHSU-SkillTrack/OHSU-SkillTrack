@@ -11,6 +11,7 @@ import { SearchBar } from "@/components/ui/SearchBar";
 import { CourseCard } from "@/components/course/CourseCard";
 import { Header } from "@/components/ui/Header";
 import { LoadingScreen } from "@/components/ui/LoadingScreen";
+import React from 'react';
 
 import styles from "@/app/styles";
 
@@ -69,43 +70,65 @@ export default function Courses() {
     const [courses, setCourses] = useState<Course[]>([])
     const [searchQuery, setSearchQuery] = useState('')
     const router = useRouter();
+    const [refreshing, setRefreshing] = React.useState(false);
+
 
     useEffect(() => {
-        async function loadUser() {
-            try {
-                const user: StudentData = await fetchUser()
-                console.log(user)
 
-                const courses = user.Courses
-                const coursesParsed: Course[] = []
-
-                if (!courses) {
-                    return
-                }
-
-                Object.entries(courses).forEach(([courseId, course]) => {
-
-                    const courseName = !course.CourseName ? "Unnamed course" : course.CourseName
-                    const skillsArr = Object.values(course.Skills ?? {});
-                    const totalSkills = skillsArr.length;
-                    const completedSkills = skillsArr.filter((s) => s.CheckedOff).length;
-
-                    const newCourse: Course = { courseId, courseName, totalSkills, completedSkills, studentCount: 0 }
-                    coursesParsed.push(newCourse)
-                })
-
-                setCourses(coursesParsed)
-            }
-            catch (e) {
-                setError(true)
-                console.error("Failed to fetch user data", e)
-            }
-            finally {
-                setLoading(false)
-            }
-        }
         loadUser()
+
+
     }, [])
+
+
+    const onRefresh = async () =>{
+
+        setRefreshing(true)
+
+        loadUser()
+
+
+        setRefreshing(false)
+
+    }
+
+    async function loadUser() {
+        try {
+            const user: StudentData = await fetchUser()
+            console.log(user)
+
+            const courses = user.Courses
+            const coursesParsed: Course[] = []
+
+            if (!courses) {
+                return
+            }
+
+            Object.entries(courses).forEach(([courseId, course]) => {
+
+                const courseName = !course.CourseName ? "Unnamed course" : course.CourseName
+                const skillsArr = Object.values(course.Skills ?? {});
+                const totalSkills = skillsArr.length;
+                const completedSkills = skillsArr.filter((s) => s.CheckedOff).length;
+
+                const newCourse: Course = { courseId, courseName, totalSkills, completedSkills, studentCount: 0 }
+                coursesParsed.push(newCourse)
+            })
+
+            setCourses(coursesParsed)
+        }
+        catch (e) {
+            setError(true)
+            console.error("Failed to fetch user data", e)
+        }
+        finally {
+            setLoading(false)
+        }
+    }
+
+
+    
+
 
     const filteredCourses = useMemo(() => {
         const q = searchQuery.trim().toLowerCase()
@@ -158,7 +181,9 @@ export default function Courses() {
                 renderItem={renderCourse}
                 keyExtractor={(item) => `${item.courseId}`}
                 contentContainerStyle={styles.listContent}
-                showsVerticalScrollIndicator={false} />
+                showsVerticalScrollIndicator={false}
+                refreshing={refreshing}
+                onRefresh={onRefresh} />
         </View>
     )
 }
