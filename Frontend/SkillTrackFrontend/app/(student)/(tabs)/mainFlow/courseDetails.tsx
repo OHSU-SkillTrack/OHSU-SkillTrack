@@ -124,7 +124,7 @@ export default function CourseDetails() {
 
 
         setRefreshing(true)
-        fetchCourseSkills()
+        await fetchCourseSkills()
         setRefreshing(false)
     }
 

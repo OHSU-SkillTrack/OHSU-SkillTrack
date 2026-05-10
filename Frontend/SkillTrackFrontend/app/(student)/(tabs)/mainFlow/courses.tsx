@@ -85,7 +85,7 @@ export default function Courses() {
 
         setRefreshing(true)
 
-        loadUser()
+        await loadUser()
 
 
         setRefreshing(false)

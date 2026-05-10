@@ -75,7 +75,7 @@ export default function Resources() {
     const onRefresh = async () => {
         setRefreshing(true)
 
-        loadCards()
+        await loadCards()
 
         setRefreshing(false)
     }
