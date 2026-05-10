@@ -10,6 +10,7 @@ import { LoadingScreen } from '@/components/ui/LoadingScreen';
 import { SearchBar } from '@/components/ui/SearchBar';
 import { Header } from '@/components/ui/Header';
 import { SkillCard } from '@/components/skill/SkillCard';
+import React from 'react';
 
 
 interface Skill {
@@ -46,6 +47,9 @@ export default function CourseDetails() {
     const [searchQuery, setSearchQuery] = useState('');
     const [filter, setFilter] = useState<'all' | 'complete' | 'incomplete'>('all');
     const [loading, setLoading] = useState(true);
+
+    //for refresh control
+    const [refreshing, setRefreshing] = React.useState(false);
 
     // Parse course data from params
     const courseName = decodeURIComponent(params.id as string); // for the UI
@@ -114,6 +118,15 @@ export default function CourseDetails() {
     useEffect(() => {
         fetchCourseSkills();
     }, [fetchCourseSkills]);
+
+
+    const onRefresh = async() =>{
+
+
+        setRefreshing(true)
+        fetchCourseSkills()
+        setRefreshing(false)
+    }
 
     // const completedSkills = completedSkillsFromParams > 0 
     //   ? completedSkillsFromParams 
@@ -244,6 +257,8 @@ export default function CourseDetails() {
                         keyExtractor={(item, index) => `${item.skillName}-${index}`}
                         contentContainerStyle={generalStyles.listContent}
                         showsVerticalScrollIndicator={false}
+                        refreshing={refreshing}
+                        onRefresh={onRefresh} 
                         ListFooterComponent={<View style={{ height: 100}}  />}
                     />)}
             
