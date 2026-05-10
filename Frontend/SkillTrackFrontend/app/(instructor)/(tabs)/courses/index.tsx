@@ -177,7 +177,7 @@ export default function InstructorCourses() {
             )}
             
             {/* Add Course Button */}
-            <View style={{ position: 'absolute', bottom: 30, alignSelf: 'center' }}>
+            <View style={{ position: 'absolute', bottom: 110, alignSelf: 'center' }}>
                 <TouchableOpacity
                     style={{
                         width: 56,
@@ -186,10 +186,6 @@ export default function InstructorCourses() {
                         backgroundColor: '#4972FF',
                         alignItems: 'center',
                         justifyContent: 'center',
-                        shadowColor: '#000',
-                        shadowOffset: { width: 0, height: 4 },
-                        shadowOpacity: 0.3,
-                        shadowRadius: 8,
                         elevation: 8,
                     }}
                     onPress={() => {
