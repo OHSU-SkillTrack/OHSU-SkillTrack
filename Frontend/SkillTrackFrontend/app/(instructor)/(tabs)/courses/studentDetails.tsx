@@ -11,6 +11,9 @@ import { SkillCard } from "@/components/skill/SkillCard";
 import { Header } from "@/components/ui/Header";
 import { LoadingScreen } from "@/components/ui/LoadingScreen";
 
+import React from 'react';
+
+
 import styles from "@/app/styles";
 
 interface Skill {
@@ -54,73 +57,84 @@ export default function StudentDetailsScreen() {
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(false);
 
+    //for scroll down refresh
+    const [refreshing, setRefreshing] = React.useState(false);
+
     useEffect(() => {
-        async function fetchSkills() {
-            try {
-                const session = await fetchAuthSession();
-                const token = session.tokens?.idToken?.toString();
-                
-                if (!token) {
-                    throw new Error('No auth token');
-                }
-
-                const url = `${BASE_URL}/GetCourseInformation?Course_ID=${encodeURIComponent(courseId)}&Student_Emails=${encodeURIComponent(studentEmail)}`;
-                
-                const res = await fetch(url, {
-                    method: 'GET',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'Authorization': token,
-                    },
-                });
-
-                if (!res.ok) {
-                    throw new Error(`HTTP error! status: ${res.status}`);
-                }
-
-                const data: CourseData = await res.json();
-
-                // Extract skills with their status for this student
-                const items: Skill[] = [];
-                
-                // StudentsExtended is an object keyed by email
-                const studentData = data.StudentsExtended?.[studentEmail];
-                
-
-                //set actual name and last name now that we have it
-                setFirstName(studentData?.FirstName as string)
-                setLastName(studentData?.LastName as string)
-
-
-                // Skills are nested under Courses[courseId].Skills
-                const studentSkills = studentData?.Courses?.[courseId]?.Skills;
-                
-                if (data?.Skills && typeof data.Skills === 'object') {
-                    Object.entries(data.Skills).forEach(([skillName, skillInfo]) => {
-                        // Check if this student has completed this skill
-                        const skillStatus = studentSkills?.[skillName];
-                        
-                        items.push({
-                            skillName,
-                            description: skillInfo?.Description || '',
-                            checkedOff: skillStatus?.CheckedOff || false,
-                            checkedOffBy: skillStatus?.CheckedOffBy,
-                            dateCheckedOff: skillStatus?.DateCheckedOff,
-                        });
-                    });
-                }
-
-                setSkills(items);
-            } catch (e) {
-                setError(true);
-                console.error('Error fetching skills:', e);
-            } finally {
-                setLoading(false);
-            }
-        }
-
         fetchSkills();
     }, [courseId, studentEmail]);
+
+
+    const onRefresh = async () =>{
+        setRefreshing(true)
+        await fetchSkills()
+        setRefreshing(false)
+
+    }
+    
+    async function fetchSkills() {
+        try {
+            const session = await fetchAuthSession();
+            const token = session.tokens?.idToken?.toString();
+            
+            if (!token) {
+                throw new Error('No auth token');
+            }
+
+            const url = `${BASE_URL}/GetCourseInformation?Course_ID=${encodeURIComponent(courseId)}&Student_Emails=${encodeURIComponent(studentEmail)}`;
+            
+            const res = await fetch(url, {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': token,
+                },
+            });
+
+            if (!res.ok) {
+                throw new Error(`HTTP error! status: ${res.status}`);
+            }
+
+            const data: CourseData = await res.json();
+
+            // Extract skills with their status for this student
+            const items: Skill[] = [];
+            
+            // StudentsExtended is an object keyed by email
+            const studentData = data.StudentsExtended?.[studentEmail];
+            
+
+            //set actual name and last name now that we have it
+            setFirstName(studentData?.FirstName as string)
+            setLastName(studentData?.LastName as string)
+
+
+            // Skills are nested under Courses[courseId].Skills
+            const studentSkills = studentData?.Courses?.[courseId]?.Skills;
+            
+            if (data?.Skills && typeof data.Skills === 'object') {
+                Object.entries(data.Skills).forEach(([skillName, skillInfo]) => {
+                    // Check if this student has completed this skill
+                    const skillStatus = studentSkills?.[skillName];
+                    
+                    items.push({
+                        skillName,
+                        description: skillInfo?.Description || '',
+                        checkedOff: skillStatus?.CheckedOff || false,
+                        checkedOffBy: skillStatus?.CheckedOffBy,
+                        dateCheckedOff: skillStatus?.DateCheckedOff,
+                    });
+                });
+            }
+
+            setSkills(items);
+        } catch (e) {
+            setError(true);
+            console.error('Error fetching skills:', e);
+        } finally {
+            setLoading(false);
+        }
+    }
 
     const filteredSkills = useMemo(() => {
         const q = searchQuery.trim().toLowerCase();
@@ -209,6 +223,8 @@ export default function StudentDetailsScreen() {
                     keyExtractor={(item) => item.skillName}
                     contentContainerStyle={styles.listContent}
                     showsVerticalScrollIndicator={false}
+                    refreshing={refreshing}
+                    onRefresh={onRefresh}
                 />
             )}
         </View>
