@@ -13,6 +13,8 @@ import { LoadingScreen } from "@/components/ui/LoadingScreen";
 
 import styles from "@/app/styles";
 
+import React from 'react';
+
 interface Student {
     email: string;
     firstName: string;
@@ -37,58 +39,68 @@ export default function CourseDetailsScreen() {
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(false);
 
+    //for drag down refresh
+    const [refreshing, setRefreshing] = React.useState(false);
+
     useEffect(() => {
-        async function fetchStudents() {
-            try {
-                const session = await fetchAuthSession();
-                const token = session.tokens?.idToken?.toString();
-
-                if (!token) {
-                    throw new Error('No authentication token found');
-                }
-
-                const response = await fetch(
-                    `${BASE_URL}/GetCourseInformation?Course_ID=${encodeURIComponent(courseId)}`,
-                    {
-                        method: "GET",
-                        headers: {
-                            "Content-Type": "application/json",
-                            "Authorization": token,
-                        },
-                    }
-                );
-
-                if (!response.ok) {
-                    throw new Error(`HTTP error! status: ${response.status}`);
-                }
-
-                const courseData: CourseData = await response.json();
-                
-                // Process students
-                const studentsArray: Student[] = [];
-                if (courseData.Students && Array.isArray(courseData.Students)) {
-                    courseData.Students.forEach((studentEmail: string) => {
-                        // Extract name from email
-                        const namePart = studentEmail.split('@')[0];
-                        studentsArray.push({
-                            email: studentEmail,
-                            firstName: namePart,
-                            lastName: '',
-                        });
-                    });
-                }
-
-                setStudents(studentsArray);
-            } catch (e) {
-                setError(true);
-                console.error('Error fetching students:', e);
-            } finally {
-                setLoading(false);
-            }
-        }
-
         fetchStudents();
     }, [courseId]);
+
+
+    const onRefresh = async () => {
+        setRefreshing(true);
+        await fetchStudents();
+        setRefreshing(false);
+    }
+
+    async function fetchStudents() {
+        try {
+            const session = await fetchAuthSession();
+            const token = session.tokens?.idToken?.toString();
+
+            if (!token) {
+                throw new Error('No authentication token found');
+            }
+
+            const response = await fetch(
+                `${BASE_URL}/GetCourseInformation?Course_ID=${encodeURIComponent(courseId)}`,
+                {
+                    method: "GET",
+                    headers: {
+                        "Content-Type": "application/json",
+                        "Authorization": token,
+                    },
+                }
+            );
+
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+
+            const courseData: CourseData = await response.json();
+            
+            // Process students
+            const studentsArray: Student[] = [];
+            if (courseData.Students && Array.isArray(courseData.Students)) {
+                courseData.Students.forEach((studentEmail: string) => {
+                    // Extract name from email
+                    const namePart = studentEmail.split('@')[0];
+                    studentsArray.push({
+                        email: studentEmail,
+                        firstName: namePart,
+                        lastName: '',
+                    });
+                });
+            }
+
+            setStudents(studentsArray);
+        } catch (e) {
+            setError(true);
+            console.error('Error fetching students:', e);
+        } finally {
+            setLoading(false);
+        }
+    }
 
     const filteredStudents = useMemo(() => {
         const q = searchQuery.trim().toLowerCase();
@@ -170,6 +182,8 @@ export default function CourseDetailsScreen() {
                     keyExtractor={(item) => item.email}
                     contentContainerStyle={styles.listContent}
                     showsVerticalScrollIndicator={false}
+                    refreshing={refreshing}
+                    onRefresh={onRefresh}
                     ListFooterComponent={
                         <View style={{ height: 100 }} />
                     }
