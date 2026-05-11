@@ -15,7 +15,9 @@ interface SkillDetailData {
         name: string;
         url: string;
     }>;
-    completionDetails: string;
+    checkedOff: boolean;
+    checkedOffBy?: string;
+    dateCheckedOff?: string;
 }
 
 interface CourseInfoResponse {
@@ -25,8 +27,23 @@ interface CourseInfoResponse {
             Description?: string;
             Requirements?: string[];
             Resources?: Array<{ name: string; url?: string }>;
-            CompletionDetails?: string;  // this could be needed for the "need to get checked off"/"checked off by _ on _" at the bottom?
         }>;
+}
+
+interface UserDataResponse {
+    Courses?: Record<
+        string,
+        {
+            Skills?: Record<
+                string,
+                {
+                    CheckedOff?: boolean;
+                    CheckedOffBy?: string;
+                    DateCheckedOff?: string;
+                }
+            >;
+        }
+    >;
 }
 
 export default function SkillDetail() {
@@ -57,8 +74,6 @@ export default function SkillDetail() {
         }
     }
 
-
-    // Optional: Verify skill status with API (but /hello doesn't have individual skill status)
 
     useEffect(() => {
         const fetchSkillDetails = async () => {
@@ -100,6 +115,21 @@ export default function SkillDetail() {
                 const courseInfo: CourseInfoResponse = await response.json();
                 console.log('course info: ', courseInfo);
 
+                const userResponse = await fetch(`${BASE_URL}/FetchUserData`, {
+                    method: 'GET',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': token,
+                    },
+                });
+
+                if (!userResponse.ok) {
+                    throw new Error(`User data request failed: ${userResponse.status}`);
+                }
+
+                const userData: UserDataResponse = await userResponse.json();
+                const studentSkill = userData.Courses?.[courseId]?.Skills?.[skillName];
+
                 const skillTemplate = courseInfo?.Skills?.[skillName];
 
                 if (!skillTemplate) {
@@ -117,10 +147,9 @@ export default function SkillDetail() {
                         name: r.name ?? 'Resource',
                         url: r.url ?? '#',
                     })),
-                    completionDetails: skillTemplate.CompletionDetails ?? (
-                        isComplete ? 'Marked as complete by instructor.' // probably change based on what message we want
-                            : 'This skill has not been marked as complete by an instructor.'
-                    ),
+                    checkedOff: Boolean(studentSkill?.CheckedOff),
+                    checkedOffBy: studentSkill?.CheckedOffBy,
+                    dateCheckedOff: studentSkill?.DateCheckedOff,
                 }),
 
                     setLoading(false);
@@ -169,7 +198,7 @@ export default function SkillDetail() {
                         headerBackTitle: 'Back',
                     }}
                 />
-                <View style={generalStyles.container}>
+                <View style={styles.screen}>
                     <AppText style={styles.loadingText}>Loading skill details...</AppText>
                 </View>
             </>
@@ -178,35 +207,31 @@ export default function SkillDetail() {
 
     return (
         <>
-            <View style={generalStyles.container}>
-                <View style={generalStyles.headerContainer}>
+            <View style={styles.screen}>
+                <View style={styles.topRow}>
                     <Pressable
                         onPress={() => handleBack()}
-                        hitSlop={10} // this lets users tap slightly outside the icon
+                        hitSlop={12}
                         accessibilityLabel="Back"
+                        style={styles.backButton}
                     >
-                        <Ionicons name="arrow-back-outline" size={40} color="#000000" />
+                        <Ionicons name="arrow-back-outline" size={28} color="#000000" />
                     </Pressable>
-                    <AppText style={generalStyles.courseHeaderTitle}>{skillName}</AppText>
-                    <Ionicons name="checkmark-circle-outline" size={40} color="#2F6BFF" />
+                    <Ionicons name="checkmark-circle-outline" size={30} color="#4972FF" />
                 </View>
 
-                <ScrollView style={generalStyles.container} showsVerticalScrollIndicator={false}>
+                <ScrollView style={styles.scrollView} contentContainerStyle={styles.scrollContent} showsVerticalScrollIndicator={false}>
+                    <AppText style={styles.title}>{skillName}</AppText>
+
                     {/* Status Badge */}
                     <View style={styles.statusSection}>
                         {isComplete ? (
-                            <View>
-                                <Ionicons name="checkmark-outline" size={20} color="#4972FF" />
-                                <AppText style={[
-                                    styles.statusText,
-                                    { color: "#4972FF" },
-                                ]}>Complete</AppText>
+                            <View style={styles.completedBadgeRow}>
+                                <Ionicons name="checkmark" size={26} color="#4972FF" />
+                                <AppText style={styles.completedBadgeText}>Completed Skill</AppText>
                             </View>
                         ) : (
-                            <AppText style={[
-                                styles.statusText,
-                                { color: "#919191" },
-                            ]}>Incomplete</AppText>
+                            <AppText style={styles.incompleteBadgeText}>Not Completed Yet</AppText>
                         )}
                     </View>
 
@@ -245,9 +270,27 @@ export default function SkillDetail() {
                     {/* Completion Details */}
                     <View style={styles.section}>
                         <AppText style={styles.sectionTitle}>Completion Details</AppText>
-                        <AppText style={styles.completionText}>
-                            {skillData?.completionDetails}
-                        </AppText>
+                        {skillData?.checkedOff ? (
+                            <View style={styles.completionCard}>
+                                <AppText style={styles.completionLine}>
+                                    <AppText style={styles.completionLabelInline}>Instructor Name: </AppText>
+                                    {skillData.checkedOffBy || 'Unknown Instructor'}
+                                </AppText>
+                                {skillData.checkedOffBy ? (
+                                    <AppText style={styles.completionLine}>
+                                        <AppText style={styles.completionLabelInline}>Date: </AppText>
+                                        {skillData.dateCheckedOff || 'Not provided'}
+                                    </AppText>
+                                ) : null}
+                            </View>
+                        ) : (
+                            <View style={styles.completionCard}>
+                                <AppText style={styles.completionLine}>
+                                    <AppText style={styles.completionLabelInline}>Status: </AppText>
+                                    This skill has not been checked off yet.
+                                </AppText>
+                            </View>
+                        )}
                     </View>
 
                     {/* Action Button */}
@@ -275,36 +318,80 @@ export default function SkillDetail() {
 }
 
 const styles = StyleSheet.create({
-    // ... (keep all existing styles exactly as they were)
+    screen: {
+        flex: 1,
+        backgroundColor: '#FFFFFF',
+        paddingTop: 35,
+    },
+    topRow: {
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        alignItems: 'center',
+        paddingHorizontal: 10,
+        marginBottom: 42,
+    },
+    backButton: {
+        padding: 4,
+    },
+    scrollView: {
+        flex: 1,
+    },
+    scrollContent: {
+        paddingHorizontal: 36,
+        paddingBottom: 120,
+    },
+    title: {
+        width: '100%',
+        maxWidth: 325,
+        alignSelf: 'center',
+        textAlign: 'center',
+        fontSize: 25,
+        fontWeight: '400',
+        color: '#000000',
+        lineHeight: 33,
+        marginBottom: 20,
+    },
 
     statusSection: {
-        marginBottom: 30,
+        marginBottom: 24,
         alignItems: 'center',
     },
-
-    statusText: {
+    completedBadgeRow: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        justifyContent: 'center',
+        gap: 8,
+    },
+    completedBadgeText: {
         fontSize: 20,
-        fontWeight: '600',
+        fontWeight: '400',
+        color: '#4972FF',
+        lineHeight: 27,
+        textAlign: 'center',
+    },
+    incompleteBadgeText: {
+        fontSize: 20,
+        fontWeight: '400',
+        color: '#919191',
+        lineHeight: 27,
+        textAlign: 'center',
     },
 
-    // courseName: {
-    //   fontSize: 17,
-    //   color: '#8E8E93',
-    // },
     section: {
-        marginBottom: 30,
+        marginBottom: 32,
     },
     sectionTitle: {
         fontSize: 20,
-        fontWeight: 'bold',
+        fontWeight: '600',
         color: '#000000',
-        marginBottom: 16,
+        lineHeight: 27,
+        marginBottom: 10,
     },
 
     descriptionText: {
         fontSize: 20,
         color: '#000000',
-        lineHeight: 24,
+        lineHeight: 27,
     },
     requirementItem: {
         flexDirection: 'row',
@@ -320,7 +407,7 @@ const styles = StyleSheet.create({
     requirementText: {
         fontSize: 20,
         color: '#000000',
-        lineHeight: 24,
+        lineHeight: 27,
         flex: 1,
     },
     resourceItem: {
@@ -328,7 +415,7 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         justifyContent: 'space-between',
         backgroundColor: '#F2F2F7',
-        borderRadius: 30,
+        borderRadius: 24,
         padding: 16,
         marginBottom: 10,
     },
@@ -342,27 +429,37 @@ const styles = StyleSheet.create({
         color: '#C7C7CC',
         fontWeight: '300',
     },
-    completionText: {
+    completionCard: {
+        paddingHorizontal: 18,
+        paddingVertical: 16,
+        backgroundColor: '#F2F2F7',
+        borderRadius: 18,
+    },
+    completionLine: {
         fontSize: 20,
         color: '#000000',
-        flexDirection: "row",
-        alignItems: "center"
+        lineHeight: 27,
+        marginBottom: 6,
+    },
+    completionLabelInline: {
+        fontSize: 20,
+        color: '#666666',
+        fontWeight: '400',
     },
     actionButton: {
         borderRadius: 30,
-        padding: 10,
+        paddingVertical: 12,
         alignItems: 'center',
         alignSelf: 'center',
-        marginTop: 20,
+        marginTop: 8,
         width: 250,
     },
     actionButtonText: {
         fontSize: 20,
         fontWeight: '600',
-        // color: '#ffffff',
     },
     spacer: {
-        height: 40,
+        height: 24,
     },
     loadingText: {
         fontSize: 17,

@@ -103,7 +103,7 @@ export default function Resources() {
 
     function handleResourcePress(resource: Resource) {
         router.push({
-            pathname: '/(student)/(tabs)/resourceFlow/addResource',
+            pathname: '/(student)/(tabs)/resourceFlow/resourceDetails',
             params: {
                 id: encodeURIComponent(resource.id),
                 data: encodeURIComponent(JSON.stringify(resource.data))

@@ -1,11 +1,10 @@
-import { AddButton } from '@/components/ui/AddButton';
 import {useLocalSearchParams, useRouter } from 'expo-router';
 import React, { useEffect, useState } from 'react';
-import generalStyles from '@/app/styles';
 import { AppText } from "@/components/AppText";
 import { fetchAuthSession } from 'aws-amplify/auth';
 import {Alert} from 'react-native'
 import { BASE_URL } from '@/src/constants/api';
+import { Ionicons } from '@expo/vector-icons';
 import {
     ScrollView,
     View,
@@ -151,19 +150,14 @@ export default function AddResource() {
                 throw new Error('No authentication token found');
             }
 
-
-
-            let body = 
-            JSON.stringify({
-            ...form,            //This notation automatically maps the form var onto the endpoint body! Note that as such the DrugCardFields MUST match the endpoint format. Please do not modify it unless you coordinate with backend endpoint changes
-            CardID: cardID ,})
-
-            if(cardID === 0){
-                let body = 
-                JSON.stringify({
-                ...form,            //This notation automatically maps the form var onto the endpoint body! Note that as such the DrugCardFields MUST match the endpoint format. Please do not modify it unless you coordinate with backend endpoint changes
-                })
-            }
+            const body = JSON.stringify(
+                cardID === 0
+                    ? { ...form }
+                    : {
+                        ...form,
+                        CardID: cardID,
+                    }
+            );
 
             const res = await fetch(`${BASE_URL}/AddDrugCardToUser`, {
                 method: 'POST',
@@ -196,11 +190,26 @@ export default function AddResource() {
     };
 
     return (
-        <View style={{ flex: 1, backgroundColor: '#FFFFFF' }}>
-            <ScrollView style={styles.container} contentContainerStyle={styles.content}>
-                <Text style={styles.title}>Drug Card</Text>
+        <View style={styles.screen}>
+            <View style={styles.topRow}>
+                <Ionicons name="checkmark-circle-outline" size={30} color="#4972FF" />
+                <Pressable onPress={() => router.push('/resourceFlow/resources')} hitSlop={12}>
+                    <Ionicons name="close-outline" size={28} color="#000000" />
+                </Pressable>
+            </View>
 
-                {fields.map(({ key, label, multiline }) => (
+            <TextInput
+                style={styles.titleInput}
+                value={form.genericName}
+                onChangeText={(value) => handleChange('genericName', value)}
+                placeholder="Drug Name"
+                placeholderTextColor="#919191"
+                textAlign="center"
+            />
+
+            <ScrollView style={styles.container} contentContainerStyle={styles.content}>
+
+                {fields.filter(({ key }) => key !== 'genericName').map(({ key, label, multiline }) => (
                     <View key={key} style={styles.fieldContainer}>
                         <Text style={styles.label}>{label}</Text>
                         <TextInput
@@ -208,72 +217,113 @@ export default function AddResource() {
                             value={form[key]}
                             onChangeText={value => handleChange(key, value)}
                             multiline={multiline}
-                            numberOfLines={multiline ? 3 : 1}
+                            numberOfLines={multiline ? 4 : 1}
                         />
                     </View>
                 ))}
                 
-                <Pressable style= {generalStyles.generalButton} onPress={async () =>{ await handleAddDrugCard() ;router.push('/resourceFlow/resources');  }} >
-                    <AppText style ={generalStyles.generalButtonText} >
+                <Pressable style={styles.primaryButton} onPress={async () => { await handleAddDrugCard(); router.push('/resourceFlow/resources'); }}>
+                    <AppText style={styles.primaryButtonText}>
                         Create/Update Drug Card
                     </AppText>
                 </Pressable>
 
-                <Pressable style= {generalStyles.generalButton} onPress={() => router.push('/resourceFlow/resources')}>
-                    <AppText style ={generalStyles.generalButtonText} >
+                <Pressable style={styles.secondaryButton} onPress={() => router.push('/resourceFlow/resources')}>
+                    <AppText style={styles.secondaryButtonText}>
                         Cancel
                     </AppText>
                 </Pressable>
                 
                 <View style = {styles.spacer}/>
-
-
-
             </ScrollView>
-            <View style={styles.addButtonContainer}>
-                <AddButton onPress={() => router.push('/resourceFlow/resources')} />
-            </View>
         </View>
 
     );
 }
 
 const styles = StyleSheet.create({
+    screen: {
+        flex: 1,
+        backgroundColor: '#FFFFFF',
+        paddingTop: 35,
+    },
+    topRow: {
+        paddingHorizontal: 10,
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        alignItems: 'center',
+        marginBottom: 10,
+    },
+    titleInput: {
+        fontSize: 35,
+        lineHeight: 47,
+        color: '#000000',
+        borderBottomWidth: 3,
+        borderBottomColor: '#F5F5F5',
+        marginHorizontal: 34,
+        paddingBottom: 4,
+        marginBottom: 12,
+    },
     container: {
         flex: 1,
     },
     content: {
-        padding: 16,
-    },
-    title: {
-        fontSize: 22,
-        fontWeight: 'bold',
-        marginBottom: 16,
+        paddingHorizontal: 36,
+        paddingBottom: 120,
     },
     fieldContainer: {
         marginBottom: 16,
     },
     label: {
         fontWeight: '600',
-        marginBottom: 4,
+        fontSize: 20,
+        lineHeight: 27,
+        marginBottom: 6,
+        color: '#000000',
     },
     input: {
-        borderWidth: 1,
-        borderColor: '#ccc',
-        borderRadius: 4,
-        padding: 8,
+        backgroundColor: '#F5F5F5',
+        borderRadius: 14,
+        paddingHorizontal: 14,
+        paddingVertical: 10,
+        fontSize: 20,
+        lineHeight: 27,
+        color: '#000000',
+        minHeight: 60,
     },
     inputMultiline: {
-        minHeight: 72,
+        minHeight: 96,
         textAlignVertical: 'top',
     },
-    addButtonContainer: {
-        position: 'absolute',
-        bottom: 150,
-        paddingHorizontal: 24,
-        paddingVertical: 16
+    primaryButton: {
+        marginTop: 8,
+        width: '100%',
+        backgroundColor: '#4972FF',
+        borderRadius: 30,
+        alignItems: 'center',
+        justifyContent: 'center',
+        paddingVertical: 12,
+    },
+    primaryButtonText: {
+        color: '#FFFFFF',
+        fontSize: 20,
+        fontWeight: '600',
+    },
+    secondaryButton: {
+        marginTop: 12,
+        width: '100%',
+        backgroundColor: '#F4F4F4',
+        borderRadius: 30,
+        alignItems: 'center',
+        justifyContent: 'center',
+        paddingVertical: 12,
+    },
+    secondaryButtonText: {
+        color: '#000000',
+        fontSize: 20,
+        fontWeight: '600',
     },
     spacer: {
-        height: 100,
+        height: 24,
     }
 });
