@@ -137,6 +137,9 @@ export default function Resources() {
                 showsVerticalScrollIndicator={false}
                 refreshing={refreshing}
                 onRefresh={onRefresh}
+                ListFooterComponent={
+                        <View style={{ height: 100 }} />
+                    }
             />
             <View style={styles.addButtonContainer}>
                 <AddButton onPress={handleAddPress} />
