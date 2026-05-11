@@ -79,47 +79,7 @@ export default function AddSkillScreen() {
                     onChangeText={setskillDetails}
                     multiline
                 />
-                <AppText style={{fontWeight:'bold'}}>Requirements</AppText>
-                <View
-                    style={{
-                        borderBottomWidth: 1,
-                        borderBottomColor: '#ccc',
-                        paddingVertical: 8,
-                        marginBottom: 16,
-                        flexDirection: 'row',
-                        alignItems: 'center',
-                    }}
-                    >
-                    <AppText style={{ color: '#999', flex: 1 }}>
-                        Add a requirement...
-                    </AppText>
-
-                    <TouchableOpacity onPress={'/(admin)/(tabs)/templates/newSkill.tsx'}>
-                        <AppText style={{ fontSize: 20, color: '#999' }}>+</AppText>
-                    </TouchableOpacity>
-                    </View>
                 
-                    <AppText style={{fontWeight:'bold'}}>Resource</AppText>
-                    <View
-                    style={{
-                        borderBottomWidth: 1,
-                        borderBottomColor: '#ccc',
-                        paddingVertical: 8,
-                        marginBottom: 16,
-                        flexDirection: 'row',
-                        alignItems: 'center',
-                    }}
-                    >
-                    <AppText style={{ color: '#999', flex: 1 }}>
-                        Add a resource...
-                    </AppText>
-
-                    <TouchableOpacity onPress={'/(admin)/(tabs)/templates/newSkill.tsx'}>
-                        <AppText style={{ fontSize: 20, color: '#999' }}>+</AppText>
-                    </TouchableOpacity>
-                    </View>
-                
-            
             </View>
             
             
@@ -128,7 +88,7 @@ export default function AddSkillScreen() {
                 <Pressable
                     style={[
                         styles.templateButton,
-                        (!skillName || !skillDetails ) && { opacity: 0.6 },
+                        (skillName || skillDetails ) && { opacity: 0.6 },
                     ]}
                     onPress={handleAddSkill}
                     disabled={!skillName || !skillDetails }
