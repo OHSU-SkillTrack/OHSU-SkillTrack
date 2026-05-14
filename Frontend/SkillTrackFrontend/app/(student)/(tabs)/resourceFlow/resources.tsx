@@ -156,8 +156,9 @@ const styles = StyleSheet.create({
     },
     addButtonContainer: {
         position: 'absolute',
-        bottom: 150,
+        bottom: 110,
         paddingHorizontal: 24,
-        paddingVertical: 16
+        paddingVertical: 16,
+        alignSelf: 'center' 
     }
 })
