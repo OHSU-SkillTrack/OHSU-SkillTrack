@@ -10,11 +10,6 @@ import { AppText } from '@/components/AppText'
 interface SkillDetailData {
     skillName: string;
     description: string;
-    requirements: string[];
-    resources: Array<{
-        name: string;
-        url: string;
-    }>;
     checkedOff: boolean;
     checkedOffBy?: string;
     dateCheckedOff?: string;
@@ -142,11 +137,6 @@ export default function SkillDetail() {
                 setSkillData({
                     skillName,
                     description: skillTemplate.Description ?? 'No description available.',
-                    requirements: skillTemplate.Requirements ?? ['No requirements available.'],
-                    resources: (skillTemplate.Resources ?? []).map((r) => ({
-                        name: r.name ?? 'Resource',
-                        url: r.url ?? '#',
-                    })),
                     checkedOff: Boolean(studentSkill?.CheckedOff),
                     checkedOffBy: studentSkill?.CheckedOffBy,
                     dateCheckedOff: studentSkill?.DateCheckedOff,
@@ -241,31 +231,7 @@ export default function SkillDetail() {
                         <AppText style={styles.descriptionText}>{skillData?.description}</AppText>
                     </View>
 
-                    {/* Requirements Section */}
-                    <View style={styles.section}>
-                        <AppText style={styles.sectionTitle}>Requirements</AppText>
-                        {skillData?.requirements.map((requirement, index) => (
-                            <View key={index} style={styles.requirementItem}>
-                                <AppText style={styles.bullet}>•</AppText>
-                                <AppText style={styles.requirementText}>{requirement}</AppText>
-                            </View>
-                        ))}
-                    </View>
 
-                    {/* Resources Section */}
-                    <View style={styles.section}>
-                        <AppText style={styles.sectionTitle}>Resources</AppText>
-                        {skillData?.resources.map((resource, index) => (
-                            <Pressable
-                                key={index}
-                                style={styles.resourceItem}
-                                onPress={() => handleResourcePress(resource.url)}
-                            >
-                                <AppText style={styles.resourceName}>{resource.name}</AppText>
-                                <AppText style={styles.resourceArrow}>›</AppText>
-                            </Pressable>
-                        ))}
-                    </View>
 
                     {/* Completion Details */}
                     <View style={styles.section}>
