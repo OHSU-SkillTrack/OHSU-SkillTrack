@@ -84,7 +84,7 @@ export default function AddSkillScreen() {
             
             
 
-            <View style={{ position: 'absolute', bottom: 30, left: 0, right: 0, paddingHorizontal: 20 }}>
+            <View style={{ position: 'absolute', bottom: 120, left: 0, right: 0, paddingHorizontal: 20 }}>
                 <Pressable
                     style={[
                         styles.templateButton,

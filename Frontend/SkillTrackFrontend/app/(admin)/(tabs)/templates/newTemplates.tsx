@@ -260,26 +260,6 @@ export default function AddCourseScreen() {
                         placeholderTextColor="#999"
                     />
 
-                    <AppText style={{fontWeight:'bold'}}>Course Details</AppText>
-                    <TextInput
-                        style={{
-                            height: 100,
-                            borderWidth: 1,             
-                            borderColor: '#ccc',        
-                            borderRadius: 12,           
-                            padding: 10,
-                            textAlignVertical: 'top',   
-                            backgroundColor: '#fff',    
-                            shadowColor: '#000',        
-                            shadowOffset: { width: 0, height: -3 }, 
-                            shadowOpacity: 0.2,
-                            shadowRadius: 4,
-                            elevation: 5,  
-                        }}
-                        value={courseDetails}
-                        onChangeText={setCourseDetails}
-                        multiline
-                    />
                     <AppText style={{fontWeight:'bold'}}>Skills</AppText>
 
                     {skills.map((skill, index) => (
@@ -316,7 +296,7 @@ export default function AddCourseScreen() {
 
 
             {/* Add Course Button */}
-            <View style={{ position: 'absolute', bottom: 100, alignSelf: 'center' }}>
+            <View style={{ position: 'absolute', bottom: 170, alignSelf: 'center' }}>
                 <TouchableOpacity
                     style={{
                         width: 56,
@@ -341,7 +321,7 @@ export default function AddCourseScreen() {
 
 
 
-            <View style={{ position: 'absolute', bottom: 30, left: 0, right: 0, paddingHorizontal: 20 }}>
+            <View style={{ position: 'absolute', bottom: 110, left: 0, right: 0, paddingHorizontal: 20 }}>
                 <Pressable
                     style={[
                         styles.templateButton,
