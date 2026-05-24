@@ -331,30 +331,6 @@ Resources:
         Variables:
           TABLE_NAME: SkillTrackTable
   
-
-  EditTemplateFunction:
-    Type: AWS::Serverless::Function
-    Properties:
-      CodeUri: EditTemplate/
-      Handler: app.edit_template
-      Runtime: python3.13
-      Architectures:
-        - x86_64
-      Events:
-        EditTemplate:
-          Type: Api
-          Properties:
-            RestApiId: !Ref MyApi
-            Path: /EditTemplate
-            Method: post
-      Policies:
-        - DynamoDBCrudPolicy:
-            TableName: SkillTrackTable
-      Environment:
-        Variables:
-          TABLE_NAME: SkillTrackTable
-
-
   CreateUserFunction:
     Type: AWS::Serverless::Function
     Properties:
@@ -383,6 +359,52 @@ Resources:
         Variables:
           TABLE_NAME: SkillTrackTable
           USER_POOL_ID: !Ref MyCognitoUserPool
+
+
+  AddDrugCardToUserFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: AddDrugCardToUser/
+      Handler: app.add_drug_card_to_user
+      Runtime: python3.13
+      Architectures:
+        - x86_64
+      Events:
+        AddDrugCardToUser:
+          Type: Api
+          Properties:
+            RestApiId: !Ref MyApi
+            Path: /AddDrugCardToUser
+            Method: post
+      Policies:
+        - DynamoDBCrudPolicy:
+            TableName: SkillTrackTable
+      Environment:
+        Variables:
+          TABLE_NAME: SkillTrackTable
+
+
+  GetUsersDrugCardListFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: GetUsersDrugCardList/
+      Handler: app.get_users_drug_card_list
+      Runtime: python3.13
+      Architectures:
+        - x86_64
+      Events:
+        GetUsersDrugCardList:
+          Type: Api
+          Properties:
+            RestApiId: !Ref MyApi
+            Path: /GetUsersDrugCardList
+            Method: get
+      Policies:
+        - DynamoDBCrudPolicy:
+            TableName: SkillTrackTable
+      Environment:
+        Variables:
+          TABLE_NAME: SkillTrackTable
 
 
   #----------------------------------------------------------------------ENDPOINT DEFINITION SECTION---------------------------------------------------------------------------------------#

@@ -97,15 +97,6 @@ def create_template(event, context):
             "Skills": {}
         }
 
-        exists = table.get_item(Key= {"ID": "COURSE_TEMPLATE#" + templateID})
-        if("Item" in  exists):
-            statusCode = 500
-            output_body = "template ID already exists"
-            return{
-                "statusCode": statusCode,
-                "headers": GlobalHeaders,
-                "body": json.dumps(output_body)
-            }
         
 
         for skill in skills:
@@ -118,7 +109,7 @@ def create_template(event, context):
             }
 
         
-        table.put_item(Item = newTemplateRowItem, ConditionExpression = "attribute_not_exists(ID)")
+        table.put_item(Item = newTemplateRowItem)
 
 
 
