@@ -96,7 +96,7 @@ Please note that the Access Key and Secret Key **must be kept secret**. They pro
 
 You have all the prerequisites in place now, nice job! Now we can move on to deploying the backend.
 
-### Deploying the backend (The Fun Part)
+### Deploying the backend 
 On your command line interface, navigate to the location where you have this repository located. Then further go in with the cd command until you are in the OHSU-SkillTrack/Backend/SkillTrackBackend folder. You should see something like this:
 
 <img width="500" alt="image showing a command line terminal which is currently navigated into the SkillTrackBackend folder " src="https://github.com/user-attachments/assets/53374b72-c4ef-48b5-9e82-08647feb1a4a" />
@@ -116,7 +116,6 @@ If you prefer the website UI interface you can also do it there. Follow the inst
 * https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/cfn-console-delete-stack.html
 
 
-If everything worked you can now skip to the Frontend Section, or you may scroll down to the optional readings if you would like to know some more about how the backend works behind the scenes.
 
 ⚠️ Potential issue: You must have python installed. If you don't you may have an error. It must also be version 3.13 (newer version may work, but we are certain that 3.13 does work). If you arleady have python installed and you are on windows, ensure that in your system Envionment variables python is in the path. Follow along the windows menus with the below images:
 
@@ -130,10 +129,32 @@ If everything worked you can now skip to the Frontend Section, or you may scroll
 <br>
 Ensure these two red circled lines are there. If you do not one or both, you can manually add it by pressing the new button. You will have to find the python installation location on your computer to do this.
 
-### Optional Reading
+### Setting up the first account 
+You will want to create an admin account from this account you can make other account types, like student and instructor accounts. But you will need to manually make this admin account to get everything started.
+Logged into the AWS online console, go to Amazon Cognito>user pools>MyUserPool>Users and press the button on the top right that says Create user.
+Enter an email address for this user, this is the username. This can be any email address you want. For this example we’ll use example10002000@gmail.com, but replace that with whatever email you want to use.
+Fill out the account creation like so (set the password to whatever you want):
+<img width="500" alt="image showing how to manually create a account on the cognito interface" src="https://github.com/user-attachments/assets/9f6451da-5e9e-4693-876c-271ea89f38f9" />
+
+Next go to DynamoDB>Explore Items>SkillTrackTable go to Create item, click the JSON view option on the top right, and paste in the following:
+`{ "ID": {"S": "USER#example10002000@gmail.com"},
+  "Courses": {"M": {}},
+  "FirstName": {"S": "John"},
+  "LastName": {"S": "Doe"},
+  "Roles": {"SS": ["Admin"]}`
+Change the email according to what you are actually using. And feel free to modify the first and last name strings depending on who will be using this account.
+When you set up the frontend you will now be able to log in with the email and password you set up.
+If everything worked you can now skip to the Frontend Section, or you may scroll down to the extended readings if you would like to know some more about how the backend works. You should read this section if you plan on expanding the backend.
+
+
+### Extended Reading
 (read this if you would like more in depth understanding of how the backend works, for example if you want to modify the backend code yourself. If you only want to deploy the backend you can just skip this section.) 
 
 The most imporant file in the backend is the template.yaml file in OHSU-SkillTrack/Backend/SkillTrackBackend. This file fundamentally described all resources we are deploying onto AWS every time we run _sam build_ and _sam deploy_. The basic structure is a Gateway+Lambda combination for the API endpoint creation. And each Gateway endpoint is password protected by AWS Cognito (view the architecture document also in this repo for more information). The main modifications you may be interested in making are creating new endpoints or renaming the Cognito User Pool and Client (they are called MyUserPool and MuUserPoolClient which are a bit generic, and you can feel free to change them if you'd like). For creating new endpoints we generally recommend following the format of the other endpoints that are already there in the ENDPOINT DEFINITION SECTION. When messing with this file the most important thing to be mindful of is to not accidentaly remove the Auth Section of the API definition at the top. This ensures that the API endpoints are protected and only authorized users can call them.
+
+Although AWS allows backend resources to be modified directly through the AWS Console, this must not be done for this project. All infrastructure changes should be made exclusively through the AWS SAM template files. This approach follows the Infrastructure as Code (IaC) model, which ensures the backend can be reliably versioned, reviewed, and redeployed to any AWS account with minimal effort. Maintaining all infrastructure definitions in code is critical for consistency, reproducibility, and long-term maintainability.
+Direct modifications via the AWS Console are permitted only for data-level operations, such as viewing, editing, or correcting individual records within existing database tables. These actions must not alter the structure, configuration, or permissions of the underlying resources.
+
 
 Finally it is HIGHLY recommended you go to the AWS Console website and go to: API Gateway > APIs > SkillTrackBackend > Stages and ensure CloudWatch logs are active. You may have to turn this on manually, and it usually disables itself everytime you redeploy the backend. This ensures you can diagnose any problems if you discover them.
 <img width="1915" alt="image showing the Cloudwatch logs turned on in the API Gateway settings" src="https://github.com/user-attachments/assets/75ab378e-7534-4bca-9048-3422e6e512be" />
@@ -155,7 +176,7 @@ First login to the AWS console on the web again and go to API Gateway > APIs > S
 
 Next, find the location of the example-api.ts file: Frontend/SkillTrackFrontend/src/constants/example-api.ts
 Create a copy of this file and place it in the same constants folder, but name this copy: api.ts.
-Replace the https://example.com/api text with the URL you copied from the 
+Replace the https://example.com/api text with the URL you just copied.
 <br>
 <br>
 
@@ -204,7 +225,7 @@ Save changes in the file and you should be finished with this part!
 
 
 
-### Launching the Frontend (The fun part)
+### Launching the Frontend
 Open a command terminal. On your command line interface, navigate to the location where you have this repository located. Then further go in with the cd command until you are in the OHSU-SkillTrack/Backend/SkillTrackFrontend folder. You should see something like this:
 
 <img width="500"  alt="image showing the command terminal navigated to the SkillTrackFrontend folder location" src="https://github.com/user-attachments/assets/f2a23629-5326-49eb-9388-e476a0e7b1e5" />
