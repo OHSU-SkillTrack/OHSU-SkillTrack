@@ -173,7 +173,7 @@ export default function AddCourseScreen() {
                 />
             )}
 
-            <View style={{ position: 'absolute', bottom: 30, left: 0, right: 0, paddingHorizontal: 20 }}>
+            <View style={{ position: 'absolute', bottom: 140, left: 0, right: 0, paddingHorizontal: 20 }}>
                 <Pressable
                     style={[
                         styles.refreshButton,
