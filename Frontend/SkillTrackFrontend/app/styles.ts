@@ -8,6 +8,15 @@ const generalStyles = StyleSheet.create({
     paddingHorizontal: 20,
     paddingTop: 20,
   },
+
+  containerWithImage: {
+    flex: 1,
+    backgroundColor: '#FFFFFF',
+    paddingTop: 20,
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    alignItems: 'center' 
+  },
   
   // may need to update this because year isn't exactly centered
   headerContainer: {
@@ -46,10 +55,18 @@ const generalStyles = StyleSheet.create({
     paddingRight: 10,
   },
 
+  textInput:{
+    borderBottomWidth: 1,
+    borderBottomColor: '#ccc',
+    paddingVertical: 8,
+    marginBottom: 16,
+    textAlign:'center',
+  },
+
   listContent: {
     paddingBottom: 20,
-  },  
-  
+  },
+
   // may want to update to be black?
   loadingContainer: {
     flex: 1,
@@ -100,6 +117,45 @@ const generalStyles = StyleSheet.create({
     textAlign: 'center',
     paddingHorizontal: 40,
   },
+
+  emptySearchContainer: {
+    flex: 1,
+    justifyContent: 'flex-start',
+    alignItems: 'center',
+    paddingTop: 25
+  },
+
+  emptySearchText: {
+    fontSize: 20,
+    color: '#919191',
+  },
+
+  imageFitWidthToPage:{
+    width: '90%',
+    aspectRatio: 16/9,
+    alignSelf: 'center'
+  },
+
+  generalButton:{
+    marginTop: 20,
+    paddingHorizontal: 30,
+    paddingVertical: 12,
+    backgroundColor: '#ccc',
+    borderRadius: 10,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  generalButtonText: {
+    color: '#000',
+    fontSize: 17,
+    fontWeight: 'bold',
+  },
+
+
+  spacer: {
+        height: 100,
+    },
+
   // -------------------- general styles --------------------
 
   //-------------------- courses page -------------------- 
@@ -161,6 +217,21 @@ const generalStyles = StyleSheet.create({
     color: '#FFFFFF',
     fontSize: 17,
     fontWeight: '600',
+  },
+
+  templateButton:{
+    marginTop: 20,
+    paddingHorizontal: 30,
+    paddingVertical: 12,
+    backgroundColor: '#ccc',
+    borderRadius: 10,
+    opacity: 0.3,
+  },
+
+  templateButtonText: {
+    color: '#000',
+    fontSize: 17,
+    fontWeight: 'bold',
   },
   //-------------------- courses page -------------------- 
 
