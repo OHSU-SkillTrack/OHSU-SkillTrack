@@ -1,5 +1,5 @@
-import {useLocalSearchParams, useRouter } from 'expo-router';
-import React, { useEffect, useState } from 'react';
+import {useFocusEffect, useLocalSearchParams, useRouter } from 'expo-router';
+import React, { useCallback, useEffect, useState } from 'react';
 import { AppText } from "@/components/AppText";
 import { fetchAuthSession } from 'aws-amplify/auth';
 import {Alert} from 'react-native'
@@ -107,38 +107,40 @@ export default function AddResource() {
     const[cardID, setCardID] = useState(0)
 
 
-    //
+    //    
 
-    useEffect(() => {
-        async function loadExistingCardIfPresent(){
-            console.log('eee')
+    useFocusEffect(
+        useCallback( () => {
+            async function loadExistingCardIfPresent(){
+                console.log('eee')
 
-            if(!data){
-                console.log("nope")
-                setForm(initialFields)
+                if(!data){
+                    console.log("nope")
+                    setForm(initialFields)
 
 
-            }else{
-                console.log("yup")
-                const parsedData = JSON.parse(decodeURIComponent(data as string))
+                }else{
+                    console.log("yup")
+                    const parsedData = JSON.parse(decodeURIComponent(data as string))
 
-                console.log(parsedData)
-                console.log(id)
-                setForm(parsedData)
-                if (typeof id === "string") {
-                    setCardID(parseInt(id))
+                    console.log(parsedData)
+                    console.log(id)
+                    setForm(parsedData)
+                    if (typeof id === "string") {
+                        setCardID(parseInt(id))
+                    }
                 }
+
+                
+
+                //console.log(parsedData) 
+
+    
             }
+            loadExistingCardIfPresent()  
 
-            
-
-            //console.log(parsedData)
-
-   
-        }
-        loadExistingCardIfPresent()  
-
-    }, [data])
+        }, [])
+    );
 
     async function handleAddDrugCard(){
 
@@ -172,6 +174,10 @@ export default function AddResource() {
                 const msg = await res.text();
                 throw new Error(msg);
             }
+
+            //reset the cardID since we may have used one, for the next time we visit this page
+            setCardID(0)
+
 
             Alert.alert('Success', 'Drug Card Made!');
             router.back();
