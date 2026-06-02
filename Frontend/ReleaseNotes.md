@@ -1,5 +1,9 @@
 ## Frontend Release Notes
 
+| 1.3 |
+|--------|
+| fix two drug card bugs. bug 1 is that after editing a drugcard and then trying to make a new one the new one would actually overwrite the previously edited drugcard rather than making a new entry. Bug 2 was that loading into the new drug card page would sometimes not properly do the "check for inputs" so old data would still load in despite not actually being active. Fixed by using a useFocusEffect.|
+
 | 1.2 |
 |--------|
 | Fully functional SkillTrack frontend release. Three roles for the application: Students who track their skill progression, instructors who verify and sign off skills via QR code or manually, and admins who manage users, courses, skill cards, and drug cards. The app is beta-ready and could be submitted to app stores in its current state.|
