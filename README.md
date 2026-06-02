@@ -264,3 +264,7 @@ Ensure that you select the operating system your computer is on if given the opt
 Once you have followed the steps from those instructions should be able to just run the app! For example to run it on an android emulator you would run the `npx expo run:android` command
 
 ## Next Steps
+Congratulations! You now have the app running. At the log-in screen you will want to log-in with the admin credentials you set [earlier](#setting-up-the-first-account).
+
+### On the Topic of Deploying the App to Mobile Marketplaces
+You will be interested in eventually submitting the frontend app to the app store (Google Play & App Store). There are various options for doing this depending on what your goals are. The fastest way would be using the expo EAS system. If you are interested in doing it this way, here are the directions: https://docs.expo.dev/deploy/submit-to-app-stores/ If you recall the instructions from earlier, this is the EAS method of building the app. You will need to make an expo account for this method. The free tier should be more than enough the get the up uploaded to the app markets and for ocassional updates so long as you ensure your development is done locally and you only build to the cloud when you are ready to push out a live version to the app stores.
