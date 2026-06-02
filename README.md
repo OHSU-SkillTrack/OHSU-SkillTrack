@@ -75,6 +75,13 @@ Before you continue these steps clone this reposity to your local development en
 
 If somebody else has already set up an instance of the Backend for you and you just want to locally test the frontend, you can skip to the Setting Up the Frontend section
 
+As you/after work through setting the enviornment up, if you plan on continuing the development if SkillTrack, we highly recommend you read through the [docs](docs) folder. The docs contain further information about the architecture of SkillTrack. 
+In particular. They are all word files so you will need to download them to view on your local computer.
+* [The Technical Design Brief](docs/2025-11-23-CS.011-TechnicalDesignBrief.docx) contains documentation about how the backend works on a high level, with diagrams.
+* [The Overview of the Database](docs/Overview%20of%20the%20Database.docx) explains how the database is structures and the different data types stored.
+* [The Backend Reference Document](docs/Reference%20Doc%20-%20How%20to%20call%20the%20Backend.docx) Explains how to make API calls to the backend and a description of every single live endpoint as defined in the [Backend](Backend/SkillTrackBackend).
+  * For this document in particular, if you are working on development of the Backend, we highly recommend taking this docx file and putting in a version-conrolled accessible space that you can continuously update as you make new endpoints and modify existing ones. This could be a shared google doc you have with the team, or a MD file you have in the repo, or anything of the like. 
+
 ## Setting Up the Backend
 
 ### Setting up prerequisites
