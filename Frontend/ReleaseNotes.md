@@ -1,5 +1,8 @@
 ## Frontend Release Notes
 
+| 1.2 |
+|--------|
+| Fully functional SkillTrack frontend release. Three roles for the application: Students who track their skill progression, instructors who verify and sign off skills via QR code or manually, and admins who manage users, courses, skill cards, and drug cards. The app is beta-ready and could be submitted to app stores in its current state.|
 
 | 1.1 |
 |--------|
