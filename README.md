@@ -85,11 +85,16 @@ In particular. They are all word files so you will need to download them to view
 ## Setting Up the Backend
 
 ### Setting up prerequisites
+
+You must have Python installed. It must also be version 3.13 (newer version may work, but we are certain that 3.13 does work).
+
 The backend for this application is fully managed on Amazon Web Services (AWS). You will need an AWS account. You can create one here: https://aws.amazon.com/.
 We highly recommend creating a admin IAM user to do the majority of operations from here on out rather than directly using the root account. Please read this article on how to do that https://docs.aws.amazon.com/streams/latest/dev/setting-up.html 
 
 After you are logged in to your administative user account that you just created(rather than as the root user). Go to the top right of the screen and select the security credentials option.
+
 <img width="500" alt="image highlighting how to get to the security credentials menu once logged into the AWS console" src="https://github.com/user-attachments/assets/f4a20c15-70f4-40d8-8bee-df3a1e45f6b2" />
+
 You will be brought to a new screen. On this new screen scroll to the access keys submenu and press the _Create access_ key button and select the _Command Line Interface (CLI)_ option. Go through the process of making the key. When you reach the _Retrieve access keys_ menu STOP here for now. And keep this window open for now, you will need these key values soon.
 
 Next you will need to install AWS and SAM CLI. Follow these two links to install those two:
@@ -258,3 +263,4 @@ Ensure that you select the operating system your computer is on if given the opt
 
 Once you have followed the steps from those instructions should be able to just run the app! For example to run it on an android emulator you would run the `npx expo run:android` command
 
+## Next Steps
