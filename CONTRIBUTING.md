@@ -50,7 +50,7 @@ The needed infra is already there to actually build and deploy code though, in w
 https://docs.aws.amazon.com/serverless-application-model/latest/developerguide/sam-cli-command-reference-sam-build.html
 https://docs.aws.amazon.com/serverless-application-model/latest/developerguide/sam-cli-command-reference-sam-deploy.html
 
-The most important detail to know is that the resources we want to deploy are to be specified in the template.yaml file (database tables, endpoints, user pools, etc.) And then to define specific functions for endpoints, we make a python file in a new folder to define that behavior.
+The most important detail to know is that the resources we want to deploy are to be specified in the template.yaml file (database tables, endpoints, user pools, etc.) And then to define specific functions for endpoints, we make a python file in a new folder to define that behavior. Read the README file for detailed informaition on how deploying the backend specifically works 
 
 The frontend has a automated GitHub CI to make sure that the frontend can sucessfully compile for a particular PR.
 
