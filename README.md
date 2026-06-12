@@ -54,7 +54,7 @@ Administrators can create, edit, and maintain course templates that define requi
 Administrators can upload a CSV file of student information to automatically create accounts and pre-populate course enrollments and skill information.
 
 ## Video Demo
-[Watch our demo](https://drive.google.com/file/d/1Y80GgYnAuw2M1uCTpafsPnMLDj5qolWM/view?usp=share_link)
+[Watch our demo](docs/SkillTrack%20Spring%20Release%20Demo.mp4)
 
 ## Gallary
 Here are a few images of our app!
@@ -164,7 +164,7 @@ If everything worked you can now skip to the Frontend Section, or you may scroll
 
 The most imporant file in the backend is the template.yaml file in OHSU-SkillTrack/Backend/SkillTrackBackend. This file fundamentally described all resources we are deploying onto AWS every time we run _sam build_ and _sam deploy_. The basic structure is a Gateway+Lambda combination for the API endpoint creation. And each Gateway endpoint is password protected by AWS Cognito (view the architecture document also in this repo for more information). The main modifications you may be interested in making are creating new endpoints or renaming the Cognito User Pool and Client (they are called MyUserPool and MuUserPoolClient which are a bit generic, and you can feel free to change them if you'd like). For creating new endpoints we generally recommend following the format of the other endpoints that are already there in the ENDPOINT DEFINITION SECTION. When messing with this file the most important thing to be mindful of is to not accidentaly remove the Auth Section of the API definition at the top. This ensures that the API endpoints are protected and only authorized users can call them.
 
-Although AWS allows backend resources to be modified directly through the AWS Console, this must not be done for this project. All infrastructure changes should be made exclusively through the AWS SAM template files. This approach follows the Infrastructure as Code (IaC) model, which ensures the backend can be reliably versioned, reviewed, and redeployed to any AWS account with minimal effort. Maintaining all infrastructure definitions in code is critical for consistency, reproducibility, and long-term maintainability.
+Although AWS allows backend resources to be modified directly through the AWS Console, this must not be done for this project. All infrastructure changes should be made exclusively through the AWS SAM template files found in this repo. This approach follows the Infrastructure as Code (IaC) model, which ensures the backend can be reliably versioned, reviewed, and redeployed to any AWS account with minimal effort. Maintaining all infrastructure definitions in code is critical for consistency, reproducibility, and long-term maintainability.
 Direct modifications via the AWS Console are permitted only for data-level operations, such as viewing, editing, or correcting individual records within existing database tables. These actions must not alter the structure, configuration, or permissions of the underlying resources.
 
 
