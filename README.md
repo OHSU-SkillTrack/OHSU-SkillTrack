@@ -80,7 +80,8 @@ In particular. They are all word files so you will need to download them to view
 * [The Technical Design Brief](docs/2025-11-23-CS.011-TechnicalDesignBrief.docx) contains documentation about how the backend works on a high level, with diagrams.
 * [The Overview of the Database](docs/Overview%20of%20the%20Database.docx) explains how the database is structures and the different data types stored.
 * [The Backend Reference Document](docs/Reference%20Doc%20-%20How%20to%20call%20the%20Backend.docx) Explains how to make API calls to the backend and a description of every single live endpoint as defined in the [Backend](Backend/SkillTrackBackend).
-  * For this document in particular, if you are working on development of the Backend, we highly recommend taking this docx file and putting in a version-conrolled accessible space that you can continuously update as you make new endpoints and modify existing ones. This could be a shared google doc you have with the team, or a MD file you have in the repo, or anything of the like. 
+  * For this document in particular, if you are working on development of the Backend, we highly recommend taking this docx file and putting in a version-conrolled accessible space that you can continuously update as you make new endpoints and modify existing ones. This could be a shared google doc you have with the team, or a MD file you have in the repo, or anything of the like.
+* [Known Issues](docs/Known_Issues.md) details currently unaddressed issues, that are known, in the code.
 
 ## Setting Up the Backend
 
