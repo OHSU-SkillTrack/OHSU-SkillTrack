@@ -54,7 +54,7 @@ Administrators can create, edit, and maintain course templates that define requi
 Administrators can upload a CSV file of student information to automatically create accounts and pre-populate course enrollments and skill information.
 
 ## Video Demo
-[Watch our demo](https://drive.google.com/file/d/1Y80GgYnAuw2M1uCTpafsPnMLDj5qolWM/view?usp=share_link)
+[Watch our demo](docs/SkillTrack%20Spring%20Release%20Demo.mp4)
 
 ## Gallary
 Here are a few images of our app!
@@ -75,14 +75,27 @@ Before you continue these steps clone this reposity to your local development en
 
 If somebody else has already set up an instance of the Backend for you and you just want to locally test the frontend, you can skip to the Setting Up the Frontend section
 
+As you/after work through setting the enviornment up, if you plan on continuing the development if SkillTrack, we highly recommend you read through the [docs](docs) folder. The docs contain further information about the architecture of SkillTrack. 
+In particular. They are all word files so you will need to download them to view on your local computer.
+* [The Technical Design Brief](docs/2025-11-23-CS.011-TechnicalDesignBrief.docx) contains documentation about how the backend works on a high level, with diagrams.
+* [The Overview of the Database](docs/Overview%20of%20the%20Database.docx) explains how the database is structures and the different data types stored.
+* [The Backend Reference Document](docs/Reference%20Doc%20-%20How%20to%20call%20the%20Backend.docx) Explains how to make API calls to the backend and a description of every single live endpoint as defined in the [Backend](Backend/SkillTrackBackend).
+  * For this document in particular, if you are working on development of the Backend, we highly recommend taking this docx file and putting in a version-conrolled accessible space that you can continuously update as you make new endpoints and modify existing ones. This could be a shared google doc you have with the team, or a MD file you have in the repo, or anything of the like.
+* [Known Issues](docs/Known_Issues.md) details currently unaddressed issues, that are known, in the code.
+
 ## Setting Up the Backend
 
 ### Setting up prerequisites
+
+You must have Python installed. It must also be version 3.13 (newer version may work, but we are certain that 3.13 does work).
+
 The backend for this application is fully managed on Amazon Web Services (AWS). You will need an AWS account. You can create one here: https://aws.amazon.com/.
 We highly recommend creating a admin IAM user to do the majority of operations from here on out rather than directly using the root account. Please read this article on how to do that https://docs.aws.amazon.com/streams/latest/dev/setting-up.html 
 
 After you are logged in to your administative user account that you just created(rather than as the root user). Go to the top right of the screen and select the security credentials option.
+
 <img width="500" alt="image highlighting how to get to the security credentials menu once logged into the AWS console" src="https://github.com/user-attachments/assets/f4a20c15-70f4-40d8-8bee-df3a1e45f6b2" />
+
 You will be brought to a new screen. On this new screen scroll to the access keys submenu and press the _Create access_ key button and select the _Command Line Interface (CLI)_ option. Go through the process of making the key. When you reach the _Retrieve access keys_ menu STOP here for now. And keep this window open for now, you will need these key values soon.
 
 Next you will need to install AWS and SAM CLI. Follow these two links to install those two:
@@ -152,7 +165,7 @@ If everything worked you can now skip to the Frontend Section, or you may scroll
 
 The most imporant file in the backend is the template.yaml file in OHSU-SkillTrack/Backend/SkillTrackBackend. This file fundamentally described all resources we are deploying onto AWS every time we run _sam build_ and _sam deploy_. The basic structure is a Gateway+Lambda combination for the API endpoint creation. And each Gateway endpoint is password protected by AWS Cognito (view the architecture document also in this repo for more information). The main modifications you may be interested in making are creating new endpoints or renaming the Cognito User Pool and Client (they are called MyUserPool and MuUserPoolClient which are a bit generic, and you can feel free to change them if you'd like). For creating new endpoints we generally recommend following the format of the other endpoints that are already there in the ENDPOINT DEFINITION SECTION. When messing with this file the most important thing to be mindful of is to not accidentaly remove the Auth Section of the API definition at the top. This ensures that the API endpoints are protected and only authorized users can call them.
 
-Although AWS allows backend resources to be modified directly through the AWS Console, this must not be done for this project. All infrastructure changes should be made exclusively through the AWS SAM template files. This approach follows the Infrastructure as Code (IaC) model, which ensures the backend can be reliably versioned, reviewed, and redeployed to any AWS account with minimal effort. Maintaining all infrastructure definitions in code is critical for consistency, reproducibility, and long-term maintainability.
+Although AWS allows backend resources to be modified directly through the AWS Console, this must not be done for this project. All infrastructure changes should be made exclusively through the AWS SAM template files found in this repo. This approach follows the Infrastructure as Code (IaC) model, which ensures the backend can be reliably versioned, reviewed, and redeployed to any AWS account with minimal effort. Maintaining all infrastructure definitions in code is critical for consistency, reproducibility, and long-term maintainability.
 Direct modifications via the AWS Console are permitted only for data-level operations, such as viewing, editing, or correcting individual records within existing database tables. These actions must not alter the structure, configuration, or permissions of the underlying resources.
 
 
@@ -251,3 +264,12 @@ Ensure that you select the operating system your computer is on if given the opt
 
 Once you have followed the steps from those instructions should be able to just run the app! For example to run it on an android emulator you would run the `npx expo run:android` command
 
+## Next Steps
+Congratulations! You now have the app running. At the log-in screen you will want to log-in with the admin credentials you set [earlier](#setting-up-the-first-account). To get the full experience, we recommend you start my making a course template, then after making the template going to the create users tab and making accounts for a teacher and a student. We then recommend logging out of the admin account, and into the teacher account, making a course based on the template you just made and then adding the student you just created to the course you just made. You can then log-in to the student account and begin trying the check-off mechanism. (you may need two devices to test out the QR code functionality, at least one of them being a phone).
+
+**Note that there is currently a bug were re-logging to a different account sometimes loads you into the wrong view. This can be fixed my closing out of the app fully and re-opening it.**
+
+After you have everything  set up, you can begin adding your own code! The frontend can be a bit easier to work with since your changes will immediately reload. When working with the backend it is important to always check for roles when making sensative modifications to the database or retrieving specific user data. We recommend reading through how existing endpoints do this before you begin writing your own.
+
+### On the Topic of Deploying the App to Mobile Marketplaces
+You will be interested in eventually submitting the frontend app to the app store (Google Play & App Store). There are various options for doing this depending on what your goals are. The fastest way would be using the expo EAS system. If you are interested in doing it this way, here are the directions: https://docs.expo.dev/deploy/submit-to-app-stores/ If you recall the instructions from earlier, this is the EAS method of building the app. You will need to make an expo account for this method. The free tier should be more than enough the get the up uploaded to the app markets and for ocassional updates so long as you ensure your development is done locally and you only build to the cloud when you are ready to push out a live version to the app stores.
